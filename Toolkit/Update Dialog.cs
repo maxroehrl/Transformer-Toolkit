@@ -1,4 +1,8 @@
-﻿using System;
+﻿/*
+ * Update Dialog.cs - Developed by Max Röhrl for Transformer Toolkit
+ */
+
+using System;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
@@ -7,6 +11,9 @@ using System.Windows.Forms;
 
 namespace Toolkit
 {
+    /// <summary>
+    /// Downloads the latest version of the toolkit and restarts
+    /// </summary>
     public partial class UpdateDialog : Form
     {
         private readonly string _newVersion;
@@ -18,6 +25,8 @@ namespace Toolkit
             Icon = Properties.Resources.Icon;
             _newVersion = onlineVersion;
         }
+
+        #region Event listener
 
         private void UpdateDialog_Load(object sender, EventArgs e)
         {
@@ -60,12 +69,15 @@ namespace Toolkit
             Close();
         }
 
-        public void RestartToolkit(object sender, AsyncCompletedEventArgs e)
+        private void RestartToolkit(object sender, AsyncCompletedEventArgs e)
         {
             if (e.Error == null)
             {
-                ProgressLabelText("Download completed");
+                Shared.ProgressLabelText("Download completed");
                 MessageBox.Show("The toolkit will restart now!", "Update completed", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                // No need to dispose the androidController
+                Shared.IsDisposeable = false;
                 Application.Restart();
             }
             else
@@ -74,16 +86,28 @@ namespace Toolkit
             }
         }
 
-        // Change the text of the progress label
+        #endregion
+
+        #region Public methods
+
+        /// <summary>
+        /// Change the text of the progressLabel
+        /// </summary>
+        /// <param name="text">Displayed text</param>
         public void ProgressLabelText(string text)
         {
             Invoke((new MethodInvoker(() => progressLabel.Text = text)));
         }
 
-        // Change progress of the progressBar
+        /// <summary>
+        /// Change the progress of the progressBar
+        /// </summary>
+        /// <param name="progress">Value from 0 to 100</param>
         public void ProgressBarValue(int progress)
         {
             Invoke(new MethodInvoker(() => progressBar.Value = progress));
         }
+
+        #endregion
     }
 }

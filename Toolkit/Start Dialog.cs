@@ -1,5 +1,9 @@
-﻿using System;
-using System.Drawing;
+﻿/*
+ * Start Dialog.cs - Developed by Max Röhrl for Transformer Toolkit
+ */
+
+using System;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using System.Windows.Forms;
@@ -7,6 +11,9 @@ using RegawMOD.Android;
 
 namespace Toolkit
 {
+    /// <summary>
+    /// A dialog where you can select a device from all connected devices
+    /// </summary>
     public partial class StartDialog : Form
     {
         public StartDialog()
@@ -16,17 +23,22 @@ namespace Toolkit
             Icon = Properties.Resources.Icon;
         }
 
+        #region Event listener
+
         private void StartDialog_Load(object sender, EventArgs e)
         {
             // Show version in title bar
             Text += Application.ProductVersion;
 
-            // Initialize AndroidController
-            new Thread(() => Shared.AndroidController = AndroidController.Instance).Start();
-            // Check for updates
+            // Initialize AndroidController and check for devices
+            new Thread(() =>
+            {
+                Shared.AndroidController = AndroidController.Instance;
+                Invoke(new MethodInvoker(RefreshConnectedDevices));
+            }).Start();
+
+            // Check for toolkit updates
             new Thread(() => new Update()).Start();
-            
-            RefreshConnectedDevices();
         }
 
         private void StartDialog_FormClosing(object sender, FormClosingEventArgs e)
@@ -46,7 +58,7 @@ namespace Toolkit
             // Disable startButton while checking for support
             startButton.Enabled = false;
 
-            // Only get infos about the selcted device if the clicked item gets checked
+            // Only get informations about the selcted device if the clicked item gets checked
             if (e.CurrentValue == CheckState.Unchecked)
             {
                 new Thread(() =>
@@ -55,55 +67,39 @@ namespace Toolkit
                     // the index of the device in the AndroidController.ConnectedDevices
                     Invoke(new MethodInvoker(() => Shared.DeviceIndex = ConnectedDevicesListBox.SelectedIndex));
 
-                    // Getting infos about this device if the index is valid
-                    if (Shared.DeviceIndex >= 0)
-                    {
-                        Shared.SerialNumber = Shared.AndroidController.ConnectedDevices[Shared.DeviceIndex];
-                        Shared.Device = Shared.AndroidController.GetConnectedDevice(Shared.SerialNumber);
-                        Shared.DeviceName = Shared.Device.BuildProp.GetProp(Shared.DeviceNameProperty);
-                        Shared.CodeName = Shared.Device.BuildProp.GetProp(Shared.CodeNameProperty).ToLower();
-                        Shared.AndroidVersion = Shared.Device.BuildProp.GetProp(Shared.AndroidVersionProperty);
-                        Shared.IsRooted = Shared.Device.HasRoot;
-                    }
-                    else
-                    {
-                        // A device is not responding and the user must allow ADB-Debugging
-                        MessageBox.Show("The infos about the connected device could not be fetched. " +
-                                        "Maybe your device is in recovery mode or you must allow " +
-                                        "USB debugging first.",
-                            "Getting infos failed",
-                            MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    }
+                    // Getting informations about this device if the index is valid
+                    Shared.UpdateInformations();
 
                     // Check if the device is supported
-                    if (!Shared.ValidDevices.Contains(Shared.CodeName))
+                    Invoke(new MethodInvoker(() =>
                     {
-                        Invoke(new MethodInvoker(() =>
+                        if (!Shared.ValidDevices.Contains(Shared.CodeName))
                         {
-                            MessageBox.Show(
-                                "Please only connect the TF700T, TF300T, or ME301T with enabled USB debugging.",
+                            MessageBox.Show("Please only connect the TF700T, TF300T, ME301T or the Nexus 5 with enabled USB debugging.",
                                 Shared.DeviceName + " is not supported",
                                 MessageBoxButtons.OK, MessageBoxIcon.Error);
                             RefreshConnectedDevices();
-                        }));
-                    }
-                    // Check if the android version is outdated
-                    else if (Convert.ToInt32(Shared.AndroidVersion.Replace(".", String.Empty)) <
-                             Convert.ToInt32(Shared.MinAndroidVersion.Replace(".", String.Empty)))
-                    {
-                        Invoke(new MethodInvoker(() =>
+                        }
+                        // Check if the android version is outdated
+                        else if (Convert.ToInt32(Shared.AndroidVersion.Replace(".", String.Empty)) <
+                                 Convert.ToInt32(Shared.MinAndroidVersion.Replace(".", String.Empty)))
                         {
-                            MessageBox.Show("Please update to the latest firmware from Asus.",
+                            DialogResult dialogResult = MessageBox.Show("Please update to the latest firmware from Asus.\r\n" +
+                                "Would you like to visit the download site?",
                                 "Android version " + Shared.AndroidVersion + " is outdated",
                                 MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+                            if (dialogResult == DialogResult.Yes)
+                                Process.Start("http://www.asus.com/Tablets_Mobile/ASUS_Transformer_Pad_TF700T/HelpDesk_Download/");
+
                             RefreshConnectedDevices();
-                        }));
-                    }
-                    else
-                    {
-                        // We can start over now
-                        Invoke((new MethodInvoker(() => startButton.Enabled = true)));
-                    }
+                        }
+                        else
+                        {
+                            // We can start over now
+                            startButton.Enabled = true;
+                        }
+                    }));
                     Shared.WaitCursor(false);
                 }).Start();
             }
@@ -132,7 +128,19 @@ namespace Toolkit
             Close();
         }
 
-        // Refresh the list of connected devices
+        private void driverButton_Click(object sender, EventArgs e)
+        {
+            new Thread(() => Application.Run(new DriverDialog())).Start();
+            driverButton.Enabled = false;
+        }
+
+        #endregion
+
+        #region Public methods
+
+        /// <summary>
+        /// Refresh the list of connected devices
+        /// </summary>
         private void RefreshConnectedDevices()
         {
             Shared.WaitCursor(true);
@@ -145,10 +153,6 @@ namespace Toolkit
             NoDevicesLabel.Hide();
             ConnectedDevicesListBox.Items.Clear();
             startButton.Enabled = false;
-
-            // Wait until AndroidController is ready
-            while (Shared.AndroidController == null)
-                Thread.Sleep(10);
 
             // Check if there are connected devices
             if (!Shared.AndroidController.HasConnectedDevices)
@@ -170,35 +174,44 @@ namespace Toolkit
                         if (deviceName != null)
                             Invoke(new MethodInvoker(() => ConnectedDevicesListBox.Items.Add(deviceName + " (" + serial + ")")));
                         else
-                            MessageBox.Show("The infos about the connected device could not be fetched. " +
+                            MessageBox.Show("The informations about the connected device could not be fetched. " +
                                             "Follow the instructions to setup USB debugging.",
-                                "Getting infos failed",
+                                "Getting informations failed",
                                 MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
+
                     // Now the user can select a device
                     Invoke(new MethodInvoker(() =>
                     {
                         ConnectedDevicesListBox.Enabled = true;
                         refreshButton.Enabled = true;
                     }));
+
                     Shared.WaitCursor(false);
                 }).Start();
             }
         }
 
-        // Use the wait cursor to show running background processes
+        /// <summary>
+        /// Use the wait cursor to show running background processes
+        /// </summary>
+        /// <param name="value">True to enable and false to disable the waiting cursor</param>
         public void WaitCursor(bool value)
         {
             UseWaitCursor = value;
         }
 
-        // Show outdated version in titlebar
+        /// <summary>
+        /// Show outdated version in titlebar
+        /// </summary>
         public void VersionIsOutdated()
         {
             Invoke(new MethodInvoker(() => Text += " (Update available)"));
         }
 
-        // Hide the startDialog
+        /// <summary>
+        /// Hide the startDialog form
+        /// </summary>
         public void Unhide()
         {
             Invoke(new MethodInvoker(() =>
@@ -207,5 +220,7 @@ namespace Toolkit
                 ShowInTaskbar = true;
             }));
         }
+
+        #endregion
     }
 }

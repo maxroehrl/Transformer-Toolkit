@@ -32,6 +32,7 @@
             this.ConnectedDevicesListBox = new System.Windows.Forms.CheckedListBox();
             this.refreshButton = new System.Windows.Forms.Button();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.driverButton = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.startButton = new System.Windows.Forms.Button();
@@ -47,18 +48,19 @@
             this.ConnectedDevicesListBox.CheckOnClick = true;
             this.ConnectedDevicesListBox.Enabled = false;
             this.ConnectedDevicesListBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ConnectedDevicesListBox.Location = new System.Drawing.Point(63, 45);
+            this.ConnectedDevicesListBox.Location = new System.Drawing.Point(24, 45);
             this.ConnectedDevicesListBox.Name = "ConnectedDevicesListBox";
-            this.ConnectedDevicesListBox.Size = new System.Drawing.Size(285, 126);
+            this.ConnectedDevicesListBox.Size = new System.Drawing.Size(449, 126);
             this.ConnectedDevicesListBox.TabIndex = 3;
             this.ConnectedDevicesListBox.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.ConnectedDevicesListBox_ItemCheck);
             // 
             // refreshButton
             // 
+            this.refreshButton.Enabled = false;
             this.refreshButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.refreshButton.Location = new System.Drawing.Point(6, 188);
             this.refreshButton.Name = "refreshButton";
-            this.refreshButton.Size = new System.Drawing.Size(215, 43);
+            this.refreshButton.Size = new System.Drawing.Size(235, 43);
             this.refreshButton.TabIndex = 2;
             this.refreshButton.Text = "Refresh connected devices";
             this.refreshButton.UseVisualStyleBackColor = true;
@@ -66,22 +68,34 @@
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.driverButton);
             this.groupBox1.Controls.Add(this.label1);
             this.groupBox1.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.groupBox1.Location = new System.Drawing.Point(12, 255);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(404, 124);
+            this.groupBox1.Size = new System.Drawing.Size(473, 197);
             this.groupBox1.TabIndex = 3;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Help:";
             // 
+            // driverButton
+            // 
+            this.driverButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.driverButton.Location = new System.Drawing.Point(111, 21);
+            this.driverButton.Name = "driverButton";
+            this.driverButton.Size = new System.Drawing.Size(261, 34);
+            this.driverButton.TabIndex = 5;
+            this.driverButton.Text = "Download and install ADB drivers";
+            this.driverButton.UseVisualStyleBackColor = true;
+            this.driverButton.Click += new System.EventHandler(this.driverButton_Click);
+            // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(7, 24);
+            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label1.Location = new System.Drawing.Point(9, 72);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(388, 90);
+            this.label1.Size = new System.Drawing.Size(428, 112);
             this.label1.TabIndex = 0;
             this.label1.Text = resources.GetString("label1.Text");
             // 
@@ -94,7 +108,7 @@
             this.groupBox2.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.groupBox2.Location = new System.Drawing.Point(12, 12);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(404, 237);
+            this.groupBox2.Size = new System.Drawing.Size(479, 237);
             this.groupBox2.TabIndex = 4;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Choose the device you want to flash:";
@@ -103,9 +117,9 @@
             // 
             this.startButton.Enabled = false;
             this.startButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.startButton.Location = new System.Drawing.Point(227, 188);
+            this.startButton.Location = new System.Drawing.Point(247, 188);
             this.startButton.Name = "startButton";
-            this.startButton.Size = new System.Drawing.Size(171, 43);
+            this.startButton.Size = new System.Drawing.Size(226, 43);
             this.startButton.TabIndex = 4;
             this.startButton.Text = "Start!";
             this.startButton.UseVisualStyleBackColor = true;
@@ -115,7 +129,7 @@
             // 
             this.NoDevicesLabel.AutoSize = true;
             this.NoDevicesLabel.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
-            this.NoDevicesLabel.Location = new System.Drawing.Point(131, 86);
+            this.NoDevicesLabel.Location = new System.Drawing.Point(173, 83);
             this.NoDevicesLabel.Name = "NoDevicesLabel";
             this.NoDevicesLabel.Size = new System.Drawing.Size(149, 20);
             this.NoDevicesLabel.TabIndex = 0;
@@ -126,7 +140,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSize = true;
-            this.ClientSize = new System.Drawing.Size(428, 391);
+            this.ClientSize = new System.Drawing.Size(503, 464);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
@@ -155,5 +169,6 @@
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.Label NoDevicesLabel;
         private System.Windows.Forms.Button startButton;
+        private System.Windows.Forms.Button driverButton;
     }
 }

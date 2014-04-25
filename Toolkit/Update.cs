@@ -1,4 +1,8 @@
-﻿using System;
+﻿/*
+ * Update.cs - Developed by Max Röhrl for Transformer Toolkit
+ */
+
+using System;
 using System.ComponentModel;
 using System.IO;
 using System.Net;
@@ -8,6 +12,9 @@ using System.Windows.Forms;
 
 namespace Toolkit
 {
+    /// <summary>
+    /// Get the latest versions and start updateDialog if needed
+    /// </summary>
     public class Update
     {
         public Update()
@@ -15,6 +22,8 @@ namespace Toolkit
             // Delete old versions
             if (File.Exists("Transformer Toolkit.exe.old"))
                 File.Delete("Transformer Toolkit.exe.old");
+            if (File.Exists("versions.txt"))
+                File.Delete("versions.txt");
 
             // Check if internet is working
             if (NetworkInterface.GetIsNetworkAvailable())

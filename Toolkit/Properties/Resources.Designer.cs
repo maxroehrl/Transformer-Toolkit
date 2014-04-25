@@ -79,5 +79,15 @@ namespace Toolkit.Properties {
                 return ((System.Drawing.Icon)(obj));
             }
         }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Ressource vom Typ System.Byte[].
+        /// </summary>
+        internal static byte[] Ionic_Zip {
+            get {
+                object obj = ResourceManager.GetObject("Ionic_Zip", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
     }
 }

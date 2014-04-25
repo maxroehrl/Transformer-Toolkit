@@ -1,4 +1,8 @@
-﻿using System;
+﻿/*
+ * Program.cs - Developed by Max Röhrl for Transformer Toolkit
+ */
+
+using System;
 using System.Reflection;
 using System.Resources;
 using System.Windows.Forms;
@@ -7,11 +11,10 @@ namespace Toolkit
 {
     static class Program
     {
-
         [STAThread]
         private static void Main()
         {
-            // Load AndroidLib.dll from embedded resources
+            // Load AndroidLib.dll and Ionic.Zip.dll from embedded resources
             AppDomain.CurrentDomain.AssemblyResolve += (sender, args) =>
             {
                 string dllName = args.Name.Contains(",")
@@ -27,6 +30,7 @@ namespace Toolkit
                 return Assembly.Load((byte[]) resourceManager.GetObject(dllName));
             };
 
+            // Load startDialog
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new StartDialog());

@@ -1,5 +1,10 @@
-﻿using System;
+﻿/*
+ * Unlock.cs - Developed by Max Röhrl for Transformer Toolkit
+ */
+
+using System;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.IO;
 using System.Net;
 using System.Windows.Forms;
@@ -7,6 +12,9 @@ using RegawMOD.Android;
 
 namespace Toolkit
 {
+    /// <summary>
+    /// Unlock your device via "fastboot oem unlock" or the Asus Unlock Tool
+    /// </summary>
     public class Unlock
     {
         public Unlock()
@@ -67,23 +75,32 @@ namespace Toolkit
 
             string output = Adb.ExecuteAdbCommand(Adb.FormAdbCommand(Shared.Device, "install AsusUnlock.apk"), true);
             File.Delete("AsusUnlock.apk");
-
-            Shared.ProgressLabelText(String.Empty);
             Shared.Log(output);
 
             if (!output.Contains("Failure"))
             {
+                Shared.ProgressLabelText("Starting unlock app ...");
+                Adb.ExecuteAdbCommand(Adb.FormAdbShellCommand(Shared.Device, false, "am start -n com.asus.unlock/com.asus.unlock.EulaActivity"));
                 Shared.Log("Installation finished!");
 
                 MessageBox.Show("Now you can start the unlock app on your device.\r\n" +
                                 "Please read the information carefully and follow the instructions there.\r\n" +
                                 "When your device is unlocked you can flash a recovery.", "Info",
                     MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                DialogResult dialogResult = MessageBox.Show("After you unlocked your device you should generate \r\n" +
+                                                            "your nvflash blobs to make it unbrickable.\r\n" +
+                                                            "Would you like to visit the website of AndroidRoot.Mobi?",
+                                                            "Get nvflash blobs",
+                                                            MessageBoxButtons.YesNo, MessageBoxIcon.Information);
+                if (dialogResult == DialogResult.Yes)
+                    Process.Start("https://www.androidroot.mobi/pages/guides/tegra3-guide-nvflash-jellybean/");
             }
             else
             {
                 Shared.LogError("Installation failed!");
             }
+            Shared.ProgressLabelText(String.Empty);
             Shared.ProgressBarValue(100);
             Shared.ToggleButtons(true);
             Shared.WaitCursor(false);

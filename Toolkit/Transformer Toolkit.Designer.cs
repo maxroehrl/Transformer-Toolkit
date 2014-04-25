@@ -54,11 +54,15 @@
             this.groupBox6 = new System.Windows.Forms.GroupBox();
             this.label1 = new System.Windows.Forms.Label();
             this.romButton = new System.Windows.Forms.Button();
+            this.groupBox4 = new System.Windows.Forms.GroupBox();
+            this.screenshotButton = new System.Windows.Forms.Button();
+            this.logcatButton = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
             this.groupBox5.SuspendLayout();
             this.groupBox6.SuspendLayout();
+            this.groupBox4.SuspendLayout();
             this.SuspendLayout();
             // 
             // twrpButton
@@ -161,7 +165,7 @@
             // 
             this.progressBar.Location = new System.Drawing.Point(236, 437);
             this.progressBar.Name = "progressBar";
-            this.progressBar.Size = new System.Drawing.Size(287, 15);
+            this.progressBar.Size = new System.Drawing.Size(467, 15);
             this.progressBar.TabIndex = 14;
             // 
             // groupBox3
@@ -173,7 +177,7 @@
             this.groupBox3.Controls.Add(this.DeviceNameLabel);
             this.groupBox3.Location = new System.Drawing.Point(236, 5);
             this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(287, 149);
+            this.groupBox3.Size = new System.Drawing.Size(467, 149);
             this.groupBox3.TabIndex = 15;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Device Info";
@@ -246,7 +250,7 @@
             this.logBox.Name = "logBox";
             this.logBox.ReadOnly = true;
             this.logBox.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.Vertical;
-            this.logBox.Size = new System.Drawing.Size(288, 100);
+            this.logBox.Size = new System.Drawing.Size(468, 100);
             this.logBox.TabIndex = 17;
             this.logBox.Text = "";
             // 
@@ -313,7 +317,7 @@
             // 
             this.groupBox6.Controls.Add(this.label1);
             this.groupBox6.Controls.Add(this.romButton);
-            this.groupBox6.Location = new System.Drawing.Point(388, 159);
+            this.groupBox6.Location = new System.Drawing.Point(568, 159);
             this.groupBox6.Name = "groupBox6";
             this.groupBox6.Size = new System.Drawing.Size(135, 167);
             this.groupBox6.TabIndex = 18;
@@ -325,7 +329,7 @@
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Segoe UI", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label1.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
-            this.label1.Location = new System.Drawing.Point(13, 84);
+            this.label1.Location = new System.Drawing.Point(13, 94);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(111, 60);
             this.label1.TabIndex = 5;
@@ -334,18 +338,50 @@
             // romButton
             // 
             this.romButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.romButton.Location = new System.Drawing.Point(9, 19);
+            this.romButton.Location = new System.Drawing.Point(9, 23);
             this.romButton.Name = "romButton";
             this.romButton.Size = new System.Drawing.Size(119, 55);
             this.romButton.TabIndex = 5;
             this.romButton.Text = "Show custom ROMs";
             this.romButton.Click += new System.EventHandler(this.romButton_Click);
             // 
+            // groupBox4
+            // 
+            this.groupBox4.Controls.Add(this.screenshotButton);
+            this.groupBox4.Controls.Add(this.logcatButton);
+            this.groupBox4.Location = new System.Drawing.Point(388, 160);
+            this.groupBox4.Name = "groupBox4";
+            this.groupBox4.Size = new System.Drawing.Size(174, 167);
+            this.groupBox4.TabIndex = 19;
+            this.groupBox4.TabStop = false;
+            this.groupBox4.Text = "Misc";
+            // 
+            // screenshotButton
+            // 
+            this.screenshotButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.screenshotButton.Location = new System.Drawing.Point(9, 96);
+            this.screenshotButton.Name = "screenshotButton";
+            this.screenshotButton.Size = new System.Drawing.Size(159, 55);
+            this.screenshotButton.TabIndex = 6;
+            this.screenshotButton.Text = "Take screenshot";
+            this.screenshotButton.Click += new System.EventHandler(this.screenshotButton_Click);
+            // 
+            // logcatButton
+            // 
+            this.logcatButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.logcatButton.Location = new System.Drawing.Point(9, 22);
+            this.logcatButton.Name = "logcatButton";
+            this.logcatButton.Size = new System.Drawing.Size(159, 55);
+            this.logcatButton.TabIndex = 5;
+            this.logcatButton.Text = "Save logcat";
+            this.logcatButton.Click += new System.EventHandler(this.logcatButton_Click);
+            // 
             // Toolkit
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(534, 460);
+            this.ClientSize = new System.Drawing.Size(715, 460);
+            this.Controls.Add(this.groupBox4);
             this.Controls.Add(this.groupBox6);
             this.Controls.Add(this.groupBox5);
             this.Controls.Add(this.groupBox1);
@@ -370,6 +406,7 @@
             this.groupBox5.ResumeLayout(false);
             this.groupBox6.ResumeLayout(false);
             this.groupBox6.PerformLayout();
+            this.groupBox4.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -403,6 +440,9 @@
         private System.Windows.Forms.ComboBox modeBox;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.GroupBox groupBox4;
+        private System.Windows.Forms.Button screenshotButton;
+        private System.Windows.Forms.Button logcatButton;
     }
 }
 

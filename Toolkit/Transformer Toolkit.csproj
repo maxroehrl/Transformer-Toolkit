@@ -39,7 +39,7 @@
     <WarningLevel>4</WarningLevel>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <Prefer32Bit>false</Prefer32Bit>
-    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <UseVSHostingProcess>true</UseVSHostingProcess>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -77,6 +77,11 @@
       <HintPath>.\AndroidLib.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="Ionic.Zip, Version=1.9.1.8, Culture=neutral, PublicKeyToken=edbe51ad942a3f5c, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>.\Ionic.Zip.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
@@ -84,6 +89,12 @@
     <Reference Include="System.Windows.Forms" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Driver Dialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Driver Dialog.Designer.cs">
+      <DependentUpon>Driver Dialog.cs</DependentUpon>
+    </Compile>
     <Compile Include="Shared.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -108,6 +119,9 @@
       <DependentUpon>Update Dialog.cs</DependentUpon>
     </Compile>
     <Compile Include="Update.cs" />
+    <EmbeddedResource Include="Driver Dialog.resx">
+      <DependentUpon>Driver Dialog.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
@@ -122,6 +136,7 @@
       <DependentUpon>Update Dialog.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="AndroidLib.dll" />
+    <None Include="Ionic.Zip.dll" />
     <Content Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

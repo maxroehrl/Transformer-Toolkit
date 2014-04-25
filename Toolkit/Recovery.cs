@@ -1,4 +1,8 @@
-﻿using System;
+﻿/*
+ * Recovery.cs - Developed by Max Röhrl for Transformer Toolkit
+ */
+
+using System;
 using System.ComponentModel;
 using System.IO;
 using System.Net;
@@ -9,6 +13,10 @@ namespace Toolkit
 {
     public class Recovery
     {
+        /// <summary>
+        /// Download and and flash a recovery over fastboot
+        /// </summary>
+        /// <param name="recovery">The name of the desired recovery</param>
         public Recovery(string recovery)
         {
             Shared.ToggleButtons(false);

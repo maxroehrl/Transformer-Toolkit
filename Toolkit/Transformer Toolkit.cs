@@ -1,7 +1,12 @@
-﻿using System;
+﻿/*
+ * Transformer Toolkit.cs - Developed by Max Röhrl for Transformer Toolkit
+ */
+
+using System;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Windows.Forms;
 using RegawMOD.Android;
@@ -16,6 +21,8 @@ namespace Toolkit
             Shared.Toolkit = this;
             Icon = Properties.Resources.Icon;
         }
+
+        #region Event listener
 
         private void Toolkit_Load(object sender, EventArgs e)
         {
@@ -138,6 +145,64 @@ namespace Toolkit
             else
                 Fastboot.ExecuteFastbootCommandNoReturn(Fastboot.FormFastbootCommand(Shared.Device, "reboot-bootloader"));
         }
+        private void logcatButton_Click(object sender, EventArgs e)
+        {
+            WaitCursor(true);
+            ToggleButtons(false);
+
+            // Delete old logcat
+            if (File.Exists("Logcat.txt"))
+                File.Delete("Logcat.txt");
+
+            ProgressLabelText("Saving logcat ...");
+            string unixLog = Adb.ExecuteAdbCommand(Adb.FormAdbCommand(Shared.Device, "logcat -d"), true);
+
+            // Convert UNIX text file to DOS text file
+            string log = Regex.Replace(unixLog, @"^\s+$[\r\n]*", "", RegexOptions.Multiline);
+
+            // Save logcat
+            File.WriteAllText("Logcat.txt", log);
+
+            // Open logcat
+            try
+            {
+                Process.Start("Logcat.txt");
+            }
+            catch (Exception)
+            {
+                LogError("Saving Logcat.txt failed!");
+            }
+
+            ProgressLabelText(String.Empty);
+            WaitCursor(false);
+            ToggleButtons(true);
+        }
+
+        private void screenshotButton_Click(object sender, EventArgs e)
+        {
+            WaitCursor(true);
+            ToggleButtons(false);
+
+            ProgressLabelText("Saving screenshot ...");
+            Adb.ExecuteAdbCommandNoReturn(Adb.FormAdbShellCommand(Shared.Device, false, "screencap -p /sdcard/screen.png"));
+            string fileName = "Screenshot " + DateTime.Now.ToString("F").Replace(":", "-") + ".png";
+            Shared.Device.PullFile("/sdcard/screen.png", fileName);
+            Adb.ExecuteAdbCommandNoReturn(Adb.FormAdbShellCommand(Shared.Device, false, "rm /sdcard/screen.png"));
+
+            // Show screenshot
+            try
+            {
+                Process.Start(fileName);
+            }
+            catch (Exception)
+            {
+                LogError("Saving screenshot failed!");
+            }
+
+            ProgressLabelText(String.Empty);
+            WaitCursor(false);
+            ToggleButtons(true);
+        }
 
         private void romButton_Click(object sender, EventArgs e)
         {
@@ -159,7 +224,14 @@ namespace Toolkit
             }
         }
 
-        // Enable or disable all buttons while doing background tasks
+        #endregion
+
+        #region Public methods
+
+        /// <summary>
+        /// Enable or disable all buttons of this form
+        /// </summary>
+        /// <param name="value">True to enable and false to disable all buttons</param>
         public void ToggleButtons(bool value)
         {
             Invoke(new MethodInvoker(() =>
@@ -181,16 +253,24 @@ namespace Toolkit
                     rebootRecoveryButton.Enabled = false;
                     rebootBootloaderButton.Enabled = false;
                 }
+                logcatButton.Enabled = value;
+                screenshotButton.Enabled = value;
             }));
         }
 
-        // Show info to the user
+        /// <summary>
+        /// Log an information in the logBox in this form
+        /// </summary>
+        /// <param name="text">The printed text</param>
         public void Log(string text)
         {
             Invoke(new MethodInvoker(() => logBox.AppendText(text + Environment.NewLine)));
         }
 
-        // Show error to the user
+        /// <summary>
+        /// Log an error in the logBox in this form
+        /// </summary>
+        /// <param name="text">The printed text</param>
         public void LogError(string text)
         {
             Invoke(new MethodInvoker(() =>
@@ -203,22 +283,33 @@ namespace Toolkit
             }));
         }
 
-        // Use the wait cursor to show running background processes
+        /// <summary>
+        /// Use the wait cursor to show running background processes
+        /// </summary>
+        /// <param name="value">True to enable and false to disable the waiting cursor</param>
         public void WaitCursor(bool value)
         {
             UseWaitCursor = value;
         }
 
-        // Change the text of the progress label
+        /// <summary>
+        /// Change the text of the progressLabel
+        /// </summary>
+        /// <param name="text">Displayed text</param>
         public void ProgressLabelText(string text)
         {
             Invoke((new MethodInvoker(() => progressLabel.Text = text)));
         }
 
-        // Change progress of the progressBar
+        /// <summary>
+        /// Change the progress of the progressBar
+        /// </summary>
+        /// <param name="progress">Value from 0 to 100</param>
         public void ProgressBarValue(int progress)
         {
             Invoke(new MethodInvoker(() => progressBar.Value = progress));
         }
+
+        #endregion
     }
 }
