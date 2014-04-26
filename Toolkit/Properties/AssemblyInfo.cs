@@ -6,7 +6,7 @@ using System.Resources;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("Transformer Toolkit")]
-[assembly: AssemblyDescription("A toolkit for the Asus TF700T, TF300T, and ME301T")]
+[assembly: AssemblyDescription("A toolkit for the TF700T, TF300T, ME301T and the N5")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Max Röhrl")]
 [assembly: AssemblyProduct("Transformer Toolkit")]
@@ -32,6 +32,6 @@ using System.Resources;
 // You can specify all the values or you can default the Build and Revision Numbers 
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("3.1.0")]
-[assembly: AssemblyFileVersion("3.1.0")]
+[assembly: AssemblyVersion("3.1.1")]
+[assembly: AssemblyFileVersion("3.1.1")]
 [assembly: NeutralResourcesLanguageAttribute("en")]

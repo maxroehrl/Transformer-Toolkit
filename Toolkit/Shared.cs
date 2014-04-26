@@ -255,7 +255,7 @@ namespace Toolkit
         {
             if (File.Exists("versions.txt") && IsDisposeable)
                 File.Delete("versions.txt");
-            if(IsDisposeable)
+            if(IsDisposeable && AndroidController != null)
                 AndroidController.Dispose();
         }
 

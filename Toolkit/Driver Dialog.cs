@@ -60,12 +60,11 @@ namespace Toolkit
                 ProgressLabelText("Installing driver ...");
                 Shared.InstallHinfSection(IntPtr.Zero, IntPtr.Zero, path + @"\android_winusb.inf", 0);
 
-                MessageBox.Show("Drivers are installed now. Please reconnect your device.", "Success",
-                    MessageBoxButtons.OK, MessageBoxIcon.Information);
-
-                ProgressLabelText("Cleaning up ...");
+                Hide();
                 File.Delete("Drivers.zip");
                 Directory.Delete("Drivers", true);
+                MessageBox.Show("Drivers are installed now. Please reconnect your device.", "Success",
+                    MessageBoxButtons.OK, MessageBoxIcon.Information);
                 Close();
             }
             else
