@@ -90,8 +90,18 @@ namespace Toolkit
                                 MessageBoxButtons.OK, MessageBoxIcon.Error);
 
                             if (dialogResult == DialogResult.Yes)
-                                Process.Start("http://www.asus.com/Tablets_Mobile/ASUS_Transformer_Pad_TF700T/HelpDesk_Download/");
-
+                                switch (Shared.CodeName)
+                                {
+                                    case "tf700t":
+                                        Process.Start("http://www.asus.com/Tablets_Mobile/ASUS_Transformer_Pad_TF700T/HelpDesk_Download/");
+                                        break;
+                                    case "tf300t":
+                                        Process.Start("http://www.asus.com/Tablets_Mobile/ASUS_Transformer_Pad_TF300T/HelpDesk_Download/");
+                                        break;
+                                    case "me301t":
+                                        Process.Start("http://www.asus.com/Tablets_Mobile/ASUS_MeMO_Pad_Smart_10/HelpDesk_Download/");
+                                        break;
+                                }
                             RefreshConnectedDevices();
                         }
                         else

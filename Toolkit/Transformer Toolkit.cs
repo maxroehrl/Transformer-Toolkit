@@ -128,22 +128,22 @@ namespace Toolkit
         private void rebootButton_Click(object sender, EventArgs e)
         {
             if(modeBox.SelectedText == "ADB")
-                Shared.Device.Reboot();
+                Adb.ExecuteAdbCommandNoReturn(Adb.FormAdbCommand(Shared.Device, "reboot").WithTimeout(1000));
             else
-                Fastboot.ExecuteFastbootCommandNoReturn(Fastboot.FormFastbootCommand(Shared.Device, "reboot"));
+                Fastboot.ExecuteFastbootCommandNoReturn(Fastboot.FormFastbootCommand(Shared.Device, "reboot").WithTimeout(1000));
         }
 
         private void rebootRecoveryButton_Click(object sender, EventArgs e)
         {
-            Shared.Device.RebootRecovery();
+            Adb.ExecuteAdbCommandNoReturn(Adb.FormAdbCommand(Shared.Device, "reboot recovery").WithTimeout(1000));
         }
 
         private void rebootBootloaderButton_Click(object sender, EventArgs e)
         {
             if (modeBox.SelectedText == "ADB")
-                Shared.Device.RebootBootloader();
+                Adb.ExecuteAdbCommandNoReturn(Adb.FormAdbCommand(Shared.Device, "reboot bootloader").WithTimeout(1000));
             else
-                Fastboot.ExecuteFastbootCommandNoReturn(Fastboot.FormFastbootCommand(Shared.Device, "reboot-bootloader"));
+                Fastboot.ExecuteFastbootCommandNoReturn(Fastboot.FormFastbootCommand(Shared.Device, "reboot-bootloader").WithTimeout(1000));
         }
         private void logcatButton_Click(object sender, EventArgs e)
         {
