@@ -12,8 +12,8 @@ Prerequisites
 
 * Windows Vista/7/8/8.1
 
-* .NET Framework 4.5.1 Installer (Direct Link / Web Installer):
-http://download.microsoft.com/download/7/4/0/74078A56-A3A1-492D-BBA9-865684B83C1B/NDP451-KB2859818-Web.exe
+* .NET Framework 4.5.2 Web Installer (Direct Link):
+http://www.microsoft.com/en-us/download/confirmation.aspx?id=42643
 
 
 Discussion
