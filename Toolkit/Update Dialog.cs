@@ -8,11 +8,12 @@ using System.Diagnostics;
 using System.IO;
 using System.Net;
 using System.Windows.Forms;
+using Toolkit.Properties;
 
 namespace Toolkit
 {
     /// <summary>
-    /// Downloads the latest version of the toolkit and restarts
+    ///     Downloads the latest version of the toolkit and restarts
     /// </summary>
     public partial class UpdateDialog : Form
     {
@@ -22,7 +23,7 @@ namespace Toolkit
         {
             InitializeComponent();
             Shared.UpdateDialog = this;
-            Icon = Properties.Resources.Icon;
+            Icon = Resources.Icon;
             _newVersion = onlineVersion;
         }
 
@@ -49,7 +50,7 @@ namespace Toolkit
             ProgressLabelText("Renaming old toolkit ...");
             File.Move(Process.GetCurrentProcess().MainModule.FileName, "Transformer Toolkit.exe.old");
 
-            using (WebClient webClient = new WebClient())
+            using (var webClient = new WebClient())
             {
                 webClient.DownloadProgressChanged += Shared.ProgressChanged;
                 webClient.DownloadFileCompleted += RestartToolkit;
@@ -74,16 +75,15 @@ namespace Toolkit
             if (e.Error == null)
             {
                 Shared.ProgressLabelText("Download completed");
-                MessageBox.Show("The toolkit will restart now!", "Update completed", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show("The toolkit will restart now!", "Update completed", MessageBoxButtons.OK,
+                    MessageBoxIcon.Information);
 
                 // No need to dispose the androidController
                 Shared.IsDisposeable = false;
                 Application.Restart();
             }
             else
-            {
                 MessageBox.Show("Updating toolkit failed!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
         }
 
         #endregion
@@ -91,7 +91,7 @@ namespace Toolkit
         #region Public methods
 
         /// <summary>
-        /// Change the text of the progressLabel
+        ///     Change the text of the progressLabel
         /// </summary>
         /// <param name="text">Displayed text</param>
         public void ProgressLabelText(string text)
@@ -100,7 +100,7 @@ namespace Toolkit
         }
 
         /// <summary>
-        /// Change the progress of the progressBar
+        ///     Change the progress of the progressBar
         /// </summary>
         /// <param name="progress">Value from 0 to 100</param>
         public void ProgressBarValue(int progress)

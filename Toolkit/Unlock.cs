@@ -13,7 +13,7 @@ using RegawMOD.Android;
 namespace Toolkit
 {
     /// <summary>
-    /// Unlock your device via "fastboot oem unlock" or the Asus Unlock Tool
+    ///     Unlock your device via "fastboot oem unlock" or the Asus Unlock Tool
     /// </summary>
     public class Unlock
     {
@@ -45,7 +45,7 @@ namespace Toolkit
             }
             else
             {
-                using (WebClient webClient = new WebClient())
+                using (var webClient = new WebClient())
                 {
                     webClient.DownloadProgressChanged += Shared.ProgressChanged;
                     webClient.DownloadFileCompleted += DownloadCompleted;
@@ -54,9 +54,7 @@ namespace Toolkit
                     string downloadUrl = Shared.ResolveUrl(Shared.UnlockToolUrl);
 
                     if (downloadUrl != null)
-                    {
                         webClient.DownloadFileAsync(new Uri(downloadUrl), @"AsusUnlock.apk");
-                    }
                     else
                     {
                         Shared.ProgressBarValue(100);
@@ -80,7 +78,8 @@ namespace Toolkit
             if (!output.Contains("Failure"))
             {
                 Shared.ProgressLabelText("Starting unlock app ...");
-                Adb.ExecuteAdbCommand(Adb.FormAdbShellCommand(Shared.Device, false, "am start -n com.asus.unlock/com.asus.unlock.EulaActivity"));
+                Adb.ExecuteAdbCommand(Adb.FormAdbShellCommand(Shared.Device, false,
+                    "am start -n com.asus.unlock/com.asus.unlock.EulaActivity"));
                 Shared.Log("Installation finished!");
 
                 MessageBox.Show("Now you can start the unlock app on your device.\r\n" +
@@ -91,15 +90,13 @@ namespace Toolkit
                 DialogResult dialogResult = MessageBox.Show("After you unlocked your device you should generate \r\n" +
                                                             "your nvflash blobs to make it unbrickable.\r\n" +
                                                             "Would you like to visit the website of AndroidRoot.Mobi?",
-                                                            "Get nvflash blobs",
-                                                            MessageBoxButtons.YesNo, MessageBoxIcon.Information);
+                    "Get nvflash blobs",
+                    MessageBoxButtons.YesNo, MessageBoxIcon.Information);
                 if (dialogResult == DialogResult.Yes)
                     Process.Start("https://www.androidroot.mobi/pages/guides/tegra3-guide-nvflash-jellybean/");
             }
             else
-            {
                 Shared.LogError("Installation failed!");
-            }
             Shared.ProgressLabelText(String.Empty);
             Shared.ProgressBarValue(100);
             Shared.ToggleButtons(true);

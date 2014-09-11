@@ -8,11 +8,12 @@ using System.Linq;
 using System.Threading;
 using System.Windows.Forms;
 using RegawMOD.Android;
+using Toolkit.Properties;
 
 namespace Toolkit
 {
     /// <summary>
-    /// A dialog where you can select a device from all connected devices
+    ///     A dialog where you can select a device from all connected devices
     /// </summary>
     public partial class StartDialog : Form
     {
@@ -20,7 +21,7 @@ namespace Toolkit
         {
             InitializeComponent();
             Shared.StartDialog = this;
-            Icon = Properties.Resources.Icon;
+            Icon = Resources.Icon;
         }
 
         #region Event listener
@@ -52,8 +53,10 @@ namespace Toolkit
 
             // Only allow one item being checked at a time
             for (int i = 0; i < ConnectedDevicesListBox.Items.Count; i++)
+            {
                 if (i != e.Index)
                     ConnectedDevicesListBox.SetItemChecked(i, false);
+            }
 
             // Disable startButton while checking for support
             startButton.Enabled = false;
@@ -75,33 +78,40 @@ namespace Toolkit
                     {
                         if (!Shared.ValidDevices.Contains(Shared.CodeName))
                         {
-                            MessageBox.Show("Please only connect the TF700T, TF300T, ME301T or the Nexus 5 with enabled USB debugging.",
+                            MessageBox.Show(
+                                "Please only connect the TF700T, TF300T, ME301T or the Nexus 5 with enabled USB debugging.",
                                 Shared.DeviceName + " is not supported",
                                 MessageBoxButtons.OK, MessageBoxIcon.Error);
                             RefreshConnectedDevices();
                         }
-                        // Check if the android version is outdated
+                            // Check if the android version is outdated
                         else if (Convert.ToInt32(Shared.AndroidVersion.Replace(".", String.Empty)) <
                                  Convert.ToInt32(Shared.MinAndroidVersion.Replace(".", String.Empty)))
                         {
-                            DialogResult dialogResult = MessageBox.Show("Please update to the latest firmware from Asus.\r\n" +
-                                "Would you like to visit the download site?",
-                                "Android version " + Shared.AndroidVersion + " is outdated",
-                                MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            DialogResult dialogResult =
+                                MessageBox.Show("Please update to the latest firmware from Asus.\r\n" +
+                                                "Would you like to visit the download site?",
+                                    "Android version " + Shared.AndroidVersion + " is outdated",
+                                    MessageBoxButtons.OK, MessageBoxIcon.Error);
 
                             if (dialogResult == DialogResult.Yes)
+                            {
                                 switch (Shared.CodeName)
                                 {
                                     case "tf700t":
-                                        Process.Start("http://www.asus.com/Tablets_Mobile/ASUS_Transformer_Pad_TF700T/HelpDesk_Download/");
+                                        Process.Start(
+                                            "http://www.asus.com/Tablets_Mobile/ASUS_Transformer_Pad_TF700T/HelpDesk_Download/");
                                         break;
                                     case "tf300t":
-                                        Process.Start("http://www.asus.com/Tablets_Mobile/ASUS_Transformer_Pad_TF300T/HelpDesk_Download/");
+                                        Process.Start(
+                                            "http://www.asus.com/Tablets_Mobile/ASUS_Transformer_Pad_TF300T/HelpDesk_Download/");
                                         break;
                                     case "me301t":
-                                        Process.Start("http://www.asus.com/Tablets_Mobile/ASUS_MeMO_Pad_Smart_10/HelpDesk_Download/");
+                                        Process.Start(
+                                            "http://www.asus.com/Tablets_Mobile/ASUS_MeMO_Pad_Smart_10/HelpDesk_Download/");
                                         break;
                                 }
+                            }
                             RefreshConnectedDevices();
                         }
                         else
@@ -114,9 +124,7 @@ namespace Toolkit
                 }).Start();
             }
             else
-            {
                 Shared.WaitCursor(false);
-            }
         }
 
         private void refreshButton_Click(object sender, EventArgs e)
@@ -133,7 +141,7 @@ namespace Toolkit
             Shared.IsDisposeable = false;
 
             // Close other forms
-            if(Shared.UpdateDialog != null)
+            if (Shared.UpdateDialog != null)
                 Shared.UpdateDialog.Close();
             Close();
         }
@@ -149,7 +157,7 @@ namespace Toolkit
         #region Public methods
 
         /// <summary>
-        /// Refresh the list of connected devices
+        ///     Refresh the list of connected devices
         /// </summary>
         private void RefreshConnectedDevices()
         {
@@ -182,12 +190,18 @@ namespace Toolkit
                         Device device = Shared.AndroidController.GetConnectedDevice(serial);
                         string deviceName = device.BuildProp.GetProp(Shared.DeviceNameProperty);
                         if (deviceName != null)
-                            Invoke(new MethodInvoker(() => ConnectedDevicesListBox.Items.Add(deviceName + " (" + serial + ")")));
+                        {
+                            Invoke(
+                                new MethodInvoker(
+                                    () => ConnectedDevicesListBox.Items.Add(deviceName + " (" + serial + ")")));
+                        }
                         else
+                        {
                             MessageBox.Show("The informations about the connected device could not be fetched. " +
                                             "Follow the instructions to setup USB debugging.",
                                 "Getting informations failed",
                                 MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        }
                     }
 
                     // Now the user can select a device
@@ -203,7 +217,7 @@ namespace Toolkit
         }
 
         /// <summary>
-        /// Use the wait cursor to show running background processes
+        ///     Use the wait cursor to show running background processes
         /// </summary>
         /// <param name="value">True to enable and false to disable the waiting cursor</param>
         public void WaitCursor(bool value)
@@ -212,7 +226,7 @@ namespace Toolkit
         }
 
         /// <summary>
-        /// Show outdated version in titlebar
+        ///     Show outdated version in titlebar
         /// </summary>
         public void VersionIsOutdated()
         {
@@ -220,7 +234,7 @@ namespace Toolkit
         }
 
         /// <summary>
-        /// Hide the startDialog form
+        ///     Hide the startDialog form
         /// </summary>
         public void Unhide()
         {

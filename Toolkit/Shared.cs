@@ -12,34 +12,37 @@ using RegawMOD.Android;
 namespace Toolkit
 {
     /// <summary>
-    /// Contains globally shared information and methods
+    ///     Contains globally shared information and methods
     /// </summary>
     public static class Shared
     {
         #region AndroidLib
 
         /// <summary>
-        /// Manages all connected devices
+        ///     Manages all connected devices
         /// </summary>
         public static AndroidController AndroidController;
 
         /// <summary>
-        /// The in the <see cref="StartDialog"/> selected device
+        ///     The in the <see cref="StartDialog" /> selected device
         /// </summary>
         public static Device Device;
 
         #endregion
 
         #region Forms
+
         public static Toolkit Toolkit;
         public static StartDialog StartDialog;
         public static UpdateDialog UpdateDialog;
         public static DriverDialog DriverDialog;
+
         #endregion
-        
+
         #region Constants
 
         #region Download Urls
+
         public const string VersionsUrl = "https://docs.google.com/uc?export=download&id=0B54vSUgF4EB2WGZjMzNacTRBX1U";
         public const string ToolkitUrl = "https://docs.google.com/uc?export=download&id=0B54vSUgF4EB2MUJvakZxWTYyRlE";
         public const string DriverUrl = "https://docs.google.com/uc?export=download&id=0B54vSUgF4EB2WUxsd1VmNDhTSWs";
@@ -53,83 +56,84 @@ namespace Toolkit
         public const string PhilzTf300TUrl = "https://docs.google.com/uc?export=download&id=0B54vSUgF4EB2N0RMNW1OYVdmc1U";
         public const string PhilzHammerheadUrl = "https://docs.google.com/uc?export=download&id=0B54vSUgF4EB2NFJuS3NoQ3hhQ0k";
         public const string UnlockToolUrl = "https://docs.google.com/uc?export=download&id=0B54vSUgF4EB2ZVppR1RHQTY4RUk";
+
         #endregion
 
         /// <summary>
-        /// Android version of the latest Asus firmware for TF700T/TF300T/ME301T
+        ///     Android version of the latest Asus firmware for TF700T/TF300T/ME301T
         /// </summary>
         public const string MinAndroidVersion = "4.2.1";
-        
+
         /// <summary>
-        /// Property which contains the code name of a device
+        ///     Property which contains the code name of a device
         /// </summary>
         public const string CodeNameProperty = "ro.build.product";
 
         /// <summary>
-        /// Property which contains the name of a device
+        ///     Property which contains the name of a device
         /// </summary>
         public const string DeviceNameProperty = "ro.product.model";
 
         /// <summary>
-        /// Property which contains the android version of a device
+        ///     Property which contains the android version of a device
         /// </summary>
         public const string AndroidVersionProperty = "ro.build.version.release";
 
         /// <summary>
-        /// List of supported devices
+        ///     List of supported devices
         /// </summary>
-        public static readonly string[] ValidDevices = { "tf700t", "tf300t", "me301t", "hammerhead" };
+        public static readonly string[] ValidDevices = {"tf700t", "tf300t", "me301t", "hammerhead"};
 
         #endregion
 
         #region Variables
 
         /// <summary>
-        /// The index of the selected device in the AndroidController.ConnectedDevices array
+        ///     The index of the selected device in the AndroidController.ConnectedDevices array
         /// </summary>
         public static int DeviceIndex;
 
         /// <summary>
-        /// The name of the selected device
+        ///     The name of the selected device
         /// </summary>
         public static string DeviceName;
 
         /// <summary>
-        /// The code name of the selected device
+        ///     The code name of the selected device
         /// </summary>
         public static string CodeName;
 
         /// <summary>
-        /// The Android version of the selected device
+        ///     The Android version of the selected device
         /// </summary>
         public static string AndroidVersion;
 
         /// <summary>
-        /// The serial number of the selected device
+        ///     The serial number of the selected device
         /// </summary>
         public static string SerialNumber;
 
         /// <summary>
-        /// Shows if the selected device is already rooted
+        ///     Shows if the selected device is already rooted
         /// </summary>
         public static bool IsRooted;
 
         /// <summary>
-        /// Used to dispose the AndroidController only when needed
+        ///     Used to dispose the AndroidController only when needed
         /// </summary>
         public static bool IsDisposeable = true;
 
         /// <summary>
-        /// Used to show an outdated version of the toolkit in the titlebar
+        ///     Used to show an outdated version of the toolkit in the titlebar
         /// </summary>
         public static bool IsOutdated = false;
 
         #endregion
-        
+
         #region Methods
 
         /// <summary>
-        /// Refreshes the informations about the selected device
+        ///     Refreshes the informations about the selected device
         /// </summary>
         public static void UpdateInformations()
         {
@@ -142,7 +146,7 @@ namespace Toolkit
         }
 
         /// <summary>
-        /// Log an information in the logBox in the toolkit form
+        ///     Log an information in the logBox in the toolkit form
         /// </summary>
         /// <param name="text">The printed text</param>
         public static void Log(string text)
@@ -152,7 +156,7 @@ namespace Toolkit
         }
 
         /// <summary>
-        /// Log an error in the logBox in the toolkit form with red color
+        ///     Log an error in the logBox in the toolkit form with red color
         /// </summary>
         /// <param name="text">The printed text</param>
         public static void LogError(string text)
@@ -162,7 +166,7 @@ namespace Toolkit
         }
 
         /// <summary>
-        /// Enable or disable all buttons of the toolkit form
+        ///     Enable or disable all buttons of the toolkit form
         /// </summary>
         /// <param name="value">True to enable and false to disable all buttons</param>
         public static void ToggleButtons(bool value)
@@ -172,7 +176,7 @@ namespace Toolkit
         }
 
         /// <summary>
-        /// Use the wait cursor to show running background processes
+        ///     Use the wait cursor to show running background processes
         /// </summary>
         /// <param name="value">True to enable and false to disable the waiting cursor</param>
         public static void WaitCursor(bool value)
@@ -184,12 +188,12 @@ namespace Toolkit
         }
 
         /// <summary>
-        /// Change the progress of the progressBar
+        ///     Change the progress of the progressBar
         /// </summary>
         /// <param name="progress">Value from 0 to 100</param>
         public static void ProgressBarValue(int progress)
         {
-            if(Toolkit != null)
+            if (Toolkit != null)
                 Toolkit.ProgressBarValue(progress);
             if (UpdateDialog != null)
                 UpdateDialog.ProgressBarValue(progress);
@@ -198,7 +202,7 @@ namespace Toolkit
         }
 
         /// <summary>
-        /// Change the text of the progressLabel
+        ///     Change the text of the progressLabel
         /// </summary>
         /// <param name="text">Displayed text</param>
         public static void ProgressLabelText(string text)
@@ -212,20 +216,20 @@ namespace Toolkit
         }
 
         /// <summary>
-        /// Handles download progress changes and displays them
+        ///     Handles download progress changes and displays them
         /// </summary>
         /// <param name="sender">Sender object</param>
         /// <param name="e">DownloadProgressChanged event args</param>
         public static void ProgressChanged(object sender, DownloadProgressChangedEventArgs e)
         {
             ProgressBarValue(e.ProgressPercentage);
-            double bytesIn = Math.Round((Convert.ToDouble(e.BytesReceived) / 1024), 0);
-            double totalBytes = Math.Round((Convert.ToDouble(e.TotalBytesToReceive) / 1024), 0);
+            double bytesIn = Math.Round((Convert.ToDouble(e.BytesReceived)/1024), 0);
+            double totalBytes = Math.Round((Convert.ToDouble(e.TotalBytesToReceive)/1024), 0);
             ProgressLabelText("Downloaded " + bytesIn + " KB of " + totalBytes + " KB");
         }
 
         /// <summary>
-        /// Returns the direct download link from a file on Google Drive 
+        ///     Returns the direct download link from a file on Google Drive
         /// </summary>
         /// <param name="url">Static download link of a file</param>
         /// <returns>Direct download link of a file</returns>
@@ -233,9 +237,9 @@ namespace Toolkit
         {
             try
             {
-                HttpWebRequest webRequest = (HttpWebRequest) WebRequest.Create(url);
+                var webRequest = (HttpWebRequest) WebRequest.Create(url);
                 webRequest.AllowAutoRedirect = false;
-                HttpWebResponse response = (HttpWebResponse) webRequest.GetResponse();
+                var response = (HttpWebResponse) webRequest.GetResponse();
                 return response.Headers.Get("Location");
             }
             catch (Exception e)
@@ -249,13 +253,13 @@ namespace Toolkit
         }
 
         /// <summary>
-        /// Free resources used by the AndroidController and delete versions.txt if needed
+        ///     Free resources used by the AndroidController and delete versions.txt if needed
         /// </summary>
         public static void CleanUp()
         {
             if (File.Exists("versions.txt") && IsDisposeable)
                 File.Delete("versions.txt");
-            if(IsDisposeable && AndroidController != null)
+            if (IsDisposeable && AndroidController != null)
                 AndroidController.Dispose();
         }
 
@@ -264,7 +268,7 @@ namespace Toolkit
         #region Extern Methods
 
         /// <summary>
-        /// Install an .inf based driver
+        ///     Install an .inf based driver
         /// </summary>
         /// <param name="hwnd">Must be IntPtr.Zero</param>
         /// <param name="moduleHandle">Must be IntPtr.Zero</param>

@@ -10,6 +10,7 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Windows.Forms;
 using RegawMOD.Android;
+using Toolkit.Properties;
 
 namespace Toolkit
 {
@@ -19,7 +20,7 @@ namespace Toolkit
         {
             InitializeComponent();
             Shared.Toolkit = this;
-            Icon = Properties.Resources.Icon;
+            Icon = Resources.Icon;
         }
 
         #region Event listener
@@ -48,7 +49,7 @@ namespace Toolkit
 
             if (File.Exists("versions.txt"))
             {
-                using (StreamReader versions = new StreamReader("versions.txt"))
+                using (var versions = new StreamReader("versions.txt"))
                 {
                     // Getting the recovery versions out of the versions.txt
                     string line;
@@ -66,9 +67,7 @@ namespace Toolkit
                 Shared.Log("Fetching recovery versions completed");
             }
             else
-            {
                 Shared.LogError("Fetching recovery versions failed!");
-            }
         }
 
         private void Toolkit_FormClosing(object sender, FormClosingEventArgs e)
@@ -102,7 +101,7 @@ namespace Toolkit
                             "You have the full responsibility for any damage or fault caused by your decision.",
                 "Warning", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
 
-            Thread t = new Thread(() => new Recovery("custom"));
+            var t = new Thread(() => new Recovery("custom"));
             // Thread must be started in SingleThreadedApartment because of the choose file dialog
             t.SetApartmentState(ApartmentState.STA);
             t.Start();
@@ -127,10 +126,13 @@ namespace Toolkit
 
         private void rebootButton_Click(object sender, EventArgs e)
         {
-            if(modeBox.SelectedText == "ADB")
+            if (modeBox.SelectedText == "ADB")
                 Adb.ExecuteAdbCommandNoReturn(Adb.FormAdbCommand(Shared.Device, "reboot").WithTimeout(1000));
             else
-                Fastboot.ExecuteFastbootCommandNoReturn(Fastboot.FormFastbootCommand(Shared.Device, "reboot").WithTimeout(1000));
+            {
+                Fastboot.ExecuteFastbootCommandNoReturn(
+                    Fastboot.FormFastbootCommand(Shared.Device, "reboot").WithTimeout(1000));
+            }
         }
 
         private void rebootRecoveryButton_Click(object sender, EventArgs e)
@@ -143,8 +145,12 @@ namespace Toolkit
             if (modeBox.SelectedText == "ADB")
                 Adb.ExecuteAdbCommandNoReturn(Adb.FormAdbCommand(Shared.Device, "reboot bootloader").WithTimeout(1000));
             else
-                Fastboot.ExecuteFastbootCommandNoReturn(Fastboot.FormFastbootCommand(Shared.Device, "reboot-bootloader").WithTimeout(1000));
+            {
+                Fastboot.ExecuteFastbootCommandNoReturn(
+                    Fastboot.FormFastbootCommand(Shared.Device, "reboot-bootloader").WithTimeout(1000));
+            }
         }
+
         private void logcatButton_Click(object sender, EventArgs e)
         {
             WaitCursor(true);
@@ -184,7 +190,8 @@ namespace Toolkit
             ToggleButtons(false);
 
             ProgressLabelText("Saving screenshot ...");
-            Adb.ExecuteAdbCommandNoReturn(Adb.FormAdbShellCommand(Shared.Device, false, "screencap -p /sdcard/screen.png"));
+            Adb.ExecuteAdbCommandNoReturn(Adb.FormAdbShellCommand(Shared.Device, false,
+                "screencap -p /sdcard/screen.png"));
             string fileName = "Screenshot " + DateTime.Now.ToString("F").Replace(":", "-") + ".png";
             Shared.Device.PullFile("/sdcard/screen.png", fileName);
             Adb.ExecuteAdbCommandNoReturn(Adb.FormAdbShellCommand(Shared.Device, false, "rm /sdcard/screen.png"));
@@ -229,7 +236,7 @@ namespace Toolkit
         #region Public methods
 
         /// <summary>
-        /// Enable or disable all buttons of this form
+        ///     Enable or disable all buttons of this form
         /// </summary>
         /// <param name="value">True to enable and false to disable all buttons</param>
         public void ToggleButtons(bool value)
@@ -259,7 +266,7 @@ namespace Toolkit
         }
 
         /// <summary>
-        /// Log an information in the logBox in this form
+        ///     Log an information in the logBox in this form
         /// </summary>
         /// <param name="text">The printed text</param>
         public void Log(string text)
@@ -268,7 +275,7 @@ namespace Toolkit
         }
 
         /// <summary>
-        /// Log an error in the logBox in this form
+        ///     Log an error in the logBox in this form
         /// </summary>
         /// <param name="text">The printed text</param>
         public void LogError(string text)
@@ -284,7 +291,7 @@ namespace Toolkit
         }
 
         /// <summary>
-        /// Use the wait cursor to show running background processes
+        ///     Use the wait cursor to show running background processes
         /// </summary>
         /// <param name="value">True to enable and false to disable the waiting cursor</param>
         public void WaitCursor(bool value)
@@ -293,7 +300,7 @@ namespace Toolkit
         }
 
         /// <summary>
-        /// Change the text of the progressLabel
+        ///     Change the text of the progressLabel
         /// </summary>
         /// <param name="text">Displayed text</param>
         public void ProgressLabelText(string text)
@@ -302,7 +309,7 @@ namespace Toolkit
         }
 
         /// <summary>
-        /// Change the progress of the progressBar
+        ///     Change the progress of the progressBar
         /// </summary>
         /// <param name="progress">Value from 0 to 100</param>
         public void ProgressBarValue(int progress)

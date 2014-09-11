@@ -9,7 +9,7 @@ using System.Windows.Forms;
 
 namespace Toolkit
 {
-    static class Program
+    internal static class Program
     {
         [STAThread]
         private static void Main()
@@ -25,7 +25,7 @@ namespace Toolkit
                 if (dllName.EndsWith("_resources"))
                     return null;
 
-                ResourceManager resourceManager = new ResourceManager("Toolkit.Properties.Resources",
+                var resourceManager = new ResourceManager("Toolkit.Properties.Resources",
                     Assembly.GetExecutingAssembly());
                 return Assembly.Load((byte[]) resourceManager.GetObject(dllName));
             };

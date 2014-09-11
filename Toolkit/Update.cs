@@ -13,7 +13,7 @@ using System.Windows.Forms;
 namespace Toolkit
 {
     /// <summary>
-    /// Get the latest versions and start updateDialog if needed
+    ///     Get the latest versions and start updateDialog if needed
     /// </summary>
     public class Update
     {
@@ -28,7 +28,7 @@ namespace Toolkit
             // Check if internet is working
             if (NetworkInterface.GetIsNetworkAvailable())
             {
-                using (WebClient webClient = new WebClient())
+                using (var webClient = new WebClient())
                 {
                     webClient.DownloadFileCompleted += DownloadComplete;
 
@@ -54,7 +54,7 @@ namespace Toolkit
                 // Hide versions.txt
                 File.SetAttributes("versions.txt", FileAttributes.Hidden);
 
-                using (StreamReader versions = new StreamReader("versions.txt"))
+                using (var versions = new StreamReader("versions.txt"))
                 {
                     string line;
                     while ((line = versions.ReadLine()) != null)
@@ -81,4 +81,3 @@ namespace Toolkit
         }
     }
 }
-

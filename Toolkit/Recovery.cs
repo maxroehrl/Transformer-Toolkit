@@ -14,7 +14,7 @@ namespace Toolkit
     public class Recovery
     {
         /// <summary>
-        /// Download and and flash a recovery over fastboot
+        ///     Download and and flash a recovery over fastboot
         /// </summary>
         /// <param name="recovery">The name of the desired recovery</param>
         public Recovery(string recovery)
@@ -25,16 +25,14 @@ namespace Toolkit
             if (recovery == "custom")
             {
                 // Choose a recovery image
-                OpenFileDialog openFileDialog = new OpenFileDialog
+                var openFileDialog = new OpenFileDialog
                 {
                     // Only allow .blob and .img files
                     Filter = "Image files (*.img)|*.img|Blob files (*.blob)|*.blob",
                 };
 
                 if (openFileDialog.ShowDialog() == DialogResult.OK)
-                {
                     FlashRecovery("\"" + openFileDialog.FileName + "\"");
-                }
                 else
                 {
                     Shared.LogError("No file selected!");
@@ -49,7 +47,7 @@ namespace Toolkit
                     File.Delete("recovery.img");
 
                 // Download selected recovery.img
-                using (WebClient webClient = new WebClient())
+                using (var webClient = new WebClient())
                 {
                     webClient.DownloadFileCompleted += DownloadCompleted;
                     webClient.DownloadProgressChanged += Shared.ProgressChanged;
@@ -117,9 +115,7 @@ namespace Toolkit
                 FlashRecovery("recovery.img");
             }
             else
-            {
                 Shared.LogError(e.Error.Message + Environment.NewLine + "Download failed!");
-            }
         }
 
         private void FlashRecovery(string path)
@@ -131,7 +127,8 @@ namespace Toolkit
             Shared.ProgressBarValue(20);
 
             Shared.ProgressLabelText("Flashing recovery ...");
-            string output = Fastboot.ExecuteFastbootCommand(Fastboot.FormFastbootCommand(Shared.Device, "flash recovery", path));
+            string output =
+                Fastboot.ExecuteFastbootCommand(Fastboot.FormFastbootCommand(Shared.Device, "flash recovery", path));
             Shared.Log(output);
             Shared.ProgressBarValue(60);
 

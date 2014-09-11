@@ -8,11 +8,12 @@ using System.IO;
 using System.Net;
 using System.Windows.Forms;
 using Ionic.Zip;
+using Toolkit.Properties;
 
 namespace Toolkit
 {
     /// <summary>
-    /// A dialog which shows the download and installation of a driver
+    ///     A dialog which shows the download and installation of a driver
     /// </summary>
     public partial class DriverDialog : Form
     {
@@ -20,7 +21,7 @@ namespace Toolkit
         {
             InitializeComponent();
             Shared.DriverDialog = this;
-            Icon = Properties.Resources.Icon;
+            Icon = Resources.Icon;
         }
 
         #region Event listener
@@ -33,7 +34,7 @@ namespace Toolkit
                 Directory.Delete("Drivers", true);
 
             // Download Drivers.zip
-            using (WebClient webClient = new WebClient())
+            using (var webClient = new WebClient())
             {
                 webClient.DownloadProgressChanged += Shared.ProgressChanged;
                 webClient.DownloadFileCompleted += DownloadComplete;
@@ -52,7 +53,7 @@ namespace Toolkit
             {
                 string path = Directory.GetCurrentDirectory() + @"\Drivers";
 
-                using (ZipFile zipFile = new ZipFile("Drivers.zip"))
+                using (var zipFile = new ZipFile("Drivers.zip"))
                 {
                     ProgressLabelText("Extracting driver ...");
                     zipFile.ExtractAll(path);
@@ -68,9 +69,7 @@ namespace Toolkit
                 Close();
             }
             else
-            {
                 MessageBox.Show("Download failed!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
         }
 
         #endregion
@@ -78,7 +77,7 @@ namespace Toolkit
         #region Public methods
 
         /// <summary>
-        /// Change the text of the progressLabel
+        ///     Change the text of the progressLabel
         /// </summary>
         /// <param name="text">Displayed text</param>
         public void ProgressLabelText(string text)
@@ -87,7 +86,7 @@ namespace Toolkit
         }
 
         /// <summary>
-        /// Change the progress of the progressBar
+        ///     Change the progress of the progressBar
         /// </summary>
         /// <param name="progress">Value from 0 to 100</param>
         public void ProgressBarValue(int progress)
