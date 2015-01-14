@@ -118,7 +118,7 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="label1.Text" xml:space="preserve">
-    <value>Remember if its the first time using ADB:
+    <value>Remember if it is the first time using ADB:
 - Install the ADB drivers from above
 - Press "Build number" 7 times in Settings&gt;About tablet
 - Activate "USB debugging" in Settings&gt;Developer options

@@ -189,16 +189,15 @@ namespace Toolkit
             WaitCursor(true);
             ToggleButtons(false);
 
-            ProgressLabelText("Saving screenshot ...");
-            Adb.ExecuteAdbCommandNoReturn(Adb.FormAdbShellCommand(Shared.Device, false,
-                "screencap -p /sdcard/screen.png"));
-            string fileName = "Screenshot " + DateTime.Now.ToString("F").Replace(":", "-") + ".png";
-            Shared.Device.PullFile("/sdcard/screen.png", fileName);
-            Adb.ExecuteAdbCommandNoReturn(Adb.FormAdbShellCommand(Shared.Device, false, "rm /sdcard/screen.png"));
-
             // Show screenshot
             try
             {
+                ProgressLabelText("Saving screenshot ...");
+                Adb.ExecuteAdbCommandNoReturn(Adb.FormAdbShellCommand(Shared.Device, false,
+                    "screencap -p /sdcard/screen.png"));
+                string fileName = "Screenshot " + DateTime.Now.ToString("F").Replace(":", "-") + ".png";
+                Shared.Device.PullFile("/sdcard/screen.png", fileName);
+                Adb.ExecuteAdbCommandNoReturn(Adb.FormAdbShellCommand(Shared.Device, false, "rm /sdcard/screen.png"));
                 Process.Start(fileName);
             }
             catch (Exception)

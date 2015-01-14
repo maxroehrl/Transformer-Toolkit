@@ -47,7 +47,7 @@ namespace Toolkit
             }
         }
 
-        private void DownloadComplete(object sender, AsyncCompletedEventArgs e)
+        private static void DownloadComplete(object sender, AsyncCompletedEventArgs e)
         {
             if (e.Error == null)
             {

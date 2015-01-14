@@ -13,7 +13,7 @@ using Toolkit.Properties;
 namespace Toolkit
 {
     /// <summary>
-    ///     A dialog where you can select a device from all connected devices
+    ///     A dialog where you can select a device from all connected ADB devices
     /// </summary>
     public partial class StartDialog : Form
     {
@@ -31,11 +31,19 @@ namespace Toolkit
             // Show version in title bar
             Text += Application.ProductVersion;
 
+            // Close old ADB instances
+            foreach (Process p in Process.GetProcessesByName("adb"))
+                p.Kill();
+
             // Initialize AndroidController and check for devices
             new Thread(() =>
             {
-                Shared.AndroidController = AndroidController.Instance;
-                Invoke(new MethodInvoker(RefreshConnectedDevices));
+                try
+                {
+                    Shared.AndroidController = AndroidController.Instance;
+                    Invoke(new MethodInvoker(RefreshConnectedDevices));
+                }
+                catch (InvalidOperationException) {}
             }).Start();
 
             // Check for toolkit updates

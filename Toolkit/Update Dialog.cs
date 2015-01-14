@@ -70,7 +70,7 @@ namespace Toolkit
             Close();
         }
 
-        private void RestartToolkit(object sender, AsyncCompletedEventArgs e)
+        private static void RestartToolkit(object sender, AsyncCompletedEventArgs e)
         {
             if (e.Error == null)
             {

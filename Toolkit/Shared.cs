@@ -224,8 +224,7 @@ namespace Toolkit
         {
             ProgressBarValue(e.ProgressPercentage);
             double bytesIn = Math.Round((Convert.ToDouble(e.BytesReceived)/1024), 0);
-            double totalBytes = Math.Round((Convert.ToDouble(e.TotalBytesToReceive)/1024), 0);
-            ProgressLabelText("Downloaded " + bytesIn + " KB of " + totalBytes + " KB");
+            ProgressLabelText("Downloaded " + bytesIn + " KB");
         }
 
         /// <summary>
