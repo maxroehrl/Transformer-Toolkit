@@ -7,7 +7,6 @@ using System.ComponentModel;
 using System.IO;
 using System.Net;
 using System.Windows.Forms;
-using Ionic.Zip;
 using Toolkit.Properties;
 
 namespace Toolkit
@@ -53,11 +52,9 @@ namespace Toolkit
             {
                 string path = Directory.GetCurrentDirectory() + @"\Drivers";
 
-                using (var zipFile = new ZipFile("Drivers.zip"))
-                {
-                    ProgressLabelText("Extracting driver ...");
-                    zipFile.ExtractAll(path);
-                }
+                ProgressLabelText("Extracting driver ...");
+                System.IO.Compression.ZipFile.ExtractToDirectory(@"Drivers.zip", path);
+
                 ProgressLabelText("Installing driver ...");
                 Shared.InstallHinfSection(IntPtr.Zero, IntPtr.Zero, path + @"\android_winusb.inf", 0);
 
