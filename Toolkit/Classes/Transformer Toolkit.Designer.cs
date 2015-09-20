@@ -28,41 +28,36 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Toolkit));
             this.twrpButton = new System.Windows.Forms.Button();
-            this.cwmButton = new System.Windows.Forms.Button();
             this.unlockButton = new System.Windows.Forms.Button();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.label4 = new System.Windows.Forms.Label();
             this.customButton = new System.Windows.Forms.Button();
-            this.philzButton = new System.Windows.Forms.Button();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.label5 = new System.Windows.Forms.Label();
-            this.progressBar = new System.Windows.Forms.ProgressBar();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.RootedLabel = new System.Windows.Forms.Label();
             this.SerialNumberLabel = new System.Windows.Forms.Label();
             this.AndroidVersionLabel = new System.Windows.Forms.Label();
             this.CodeNameLabel = new System.Windows.Forms.Label();
             this.DeviceNameLabel = new System.Windows.Forms.Label();
-            this.progressLabel = new System.Windows.Forms.Label();
             this.logBox = new System.Windows.Forms.RichTextBox();
             this.groupBox5 = new System.Windows.Forms.GroupBox();
             this.modeBox = new System.Windows.Forms.ComboBox();
             this.rebootButton = new System.Windows.Forms.Button();
             this.rebootRecoveryButton = new System.Windows.Forms.Button();
             this.rebootBootloaderButton = new System.Windows.Forms.Button();
-            this.groupBox6 = new System.Windows.Forms.GroupBox();
-            this.label1 = new System.Windows.Forms.Label();
-            this.romButton = new System.Windows.Forms.Button();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
             this.screenshotButton = new System.Windows.Forms.Button();
             this.logcatButton = new System.Windows.Forms.Button();
+            this.loadingSpinner = new System.Windows.Forms.PictureBox();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
             this.groupBox5.SuspendLayout();
-            this.groupBox6.SuspendLayout();
             this.groupBox4.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.loadingSpinner)).BeginInit();
             this.SuspendLayout();
             // 
             // twrpButton
@@ -74,16 +69,6 @@
             this.twrpButton.TabIndex = 0;
             this.twrpButton.Text = "Install TWRP Recovery ";
             this.twrpButton.Click += new System.EventHandler(this.twrpButton_Click);
-            // 
-            // cwmButton
-            // 
-            this.cwmButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.cwmButton.Location = new System.Drawing.Point(9, 104);
-            this.cwmButton.Name = "cwmButton";
-            this.cwmButton.Size = new System.Drawing.Size(201, 50);
-            this.cwmButton.TabIndex = 1;
-            this.cwmButton.Text = "Install CWM Recovery ";
-            this.cwmButton.Click += new System.EventHandler(this.cwmButton_Click);
             // 
             // unlockButton
             // 
@@ -100,11 +85,9 @@
             this.groupBox1.Controls.Add(this.label4);
             this.groupBox1.Controls.Add(this.customButton);
             this.groupBox1.Controls.Add(this.twrpButton);
-            this.groupBox1.Controls.Add(this.cwmButton);
-            this.groupBox1.Controls.Add(this.philzButton);
             this.groupBox1.Location = new System.Drawing.Point(15, 159);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(216, 273);
+            this.groupBox1.Size = new System.Drawing.Size(216, 167);
             this.groupBox1.TabIndex = 8;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Flash Recovery";
@@ -122,22 +105,12 @@
             // customButton
             // 
             this.customButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.customButton.Location = new System.Drawing.Point(9, 216);
+            this.customButton.Location = new System.Drawing.Point(9, 103);
             this.customButton.Name = "customButton";
             this.customButton.Size = new System.Drawing.Size(201, 50);
             this.customButton.TabIndex = 3;
             this.customButton.Text = "Install another recovery image";
             this.customButton.Click += new System.EventHandler(this.customButton_Click);
-            // 
-            // philzButton
-            // 
-            this.philzButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.philzButton.Location = new System.Drawing.Point(9, 160);
-            this.philzButton.Name = "philzButton";
-            this.philzButton.Size = new System.Drawing.Size(201, 50);
-            this.philzButton.TabIndex = 2;
-            this.philzButton.Text = "Install Philz Touch Recovery ";
-            this.philzButton.Click += new System.EventHandler(this.philzButton_Click);
             // 
             // groupBox2
             // 
@@ -161,13 +134,6 @@
             this.label5.Text = "If the bootloader is unlocked you\r\nmay lose the manufacturer warranty.\r\nPlease en" +
     "able \"Unknown sources\"\r\nin Settings>Security before you\r\ncontinue.";
             // 
-            // progressBar
-            // 
-            this.progressBar.Location = new System.Drawing.Point(236, 437);
-            this.progressBar.Name = "progressBar";
-            this.progressBar.Size = new System.Drawing.Size(467, 15);
-            this.progressBar.TabIndex = 14;
-            // 
             // groupBox3
             // 
             this.groupBox3.Controls.Add(this.RootedLabel);
@@ -177,7 +143,7 @@
             this.groupBox3.Controls.Add(this.DeviceNameLabel);
             this.groupBox3.Location = new System.Drawing.Point(236, 5);
             this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(467, 149);
+            this.groupBox3.Size = new System.Drawing.Size(326, 149);
             this.groupBox3.TabIndex = 15;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Device Info";
@@ -232,25 +198,15 @@
             this.DeviceNameLabel.TabIndex = 0;
             this.DeviceNameLabel.Text = "Device Name: ";
             // 
-            // progressLabel
-            // 
-            this.progressLabel.AutoSize = true;
-            this.progressLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.progressLabel.Location = new System.Drawing.Point(12, 437);
-            this.progressLabel.Name = "progressLabel";
-            this.progressLabel.Size = new System.Drawing.Size(86, 15);
-            this.progressLabel.TabIndex = 16;
-            this.progressLabel.Text = "progressLabel";
-            // 
             // logBox
             // 
             this.logBox.Cursor = System.Windows.Forms.Cursors.Default;
             this.logBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.logBox.Location = new System.Drawing.Point(235, 332);
+            this.logBox.Location = new System.Drawing.Point(15, 332);
             this.logBox.Name = "logBox";
             this.logBox.ReadOnly = true;
             this.logBox.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.Vertical;
-            this.logBox.Size = new System.Drawing.Size(468, 100);
+            this.logBox.Size = new System.Drawing.Size(547, 100);
             this.logBox.TabIndex = 17;
             this.logBox.Text = "";
             // 
@@ -313,38 +269,6 @@
             this.rebootBootloaderButton.Text = "Reboot bootloader";
             this.rebootBootloaderButton.Click += new System.EventHandler(this.rebootBootloaderButton_Click);
             // 
-            // groupBox6
-            // 
-            this.groupBox6.Controls.Add(this.label1);
-            this.groupBox6.Controls.Add(this.romButton);
-            this.groupBox6.Location = new System.Drawing.Point(568, 159);
-            this.groupBox6.Name = "groupBox6";
-            this.groupBox6.Size = new System.Drawing.Size(135, 167);
-            this.groupBox6.TabIndex = 18;
-            this.groupBox6.TabStop = false;
-            this.groupBox6.Text = "About";
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("Segoe UI", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
-            this.label1.Location = new System.Drawing.Point(13, 94);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(111, 60);
-            this.label1.TabIndex = 5;
-            this.label1.Text = "This toolkit was\r\ncreated by\r\nMax Röhrl";
-            // 
-            // romButton
-            // 
-            this.romButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.romButton.Location = new System.Drawing.Point(9, 23);
-            this.romButton.Name = "romButton";
-            this.romButton.Size = new System.Drawing.Size(119, 55);
-            this.romButton.TabIndex = 5;
-            this.romButton.Text = "Show custom ROMs";
-            this.romButton.Click += new System.EventHandler(this.romButton_Click);
-            // 
             // groupBox4
             // 
             this.groupBox4.Controls.Add(this.screenshotButton);
@@ -376,19 +300,27 @@
             this.logcatButton.Text = "Save logcat";
             this.logcatButton.Click += new System.EventHandler(this.logcatButton_Click);
             // 
+            // loadingSpinner
+            // 
+            this.loadingSpinner.Image = ((System.Drawing.Image)(resources.GetObject("loadingSpinner.Image")));
+            this.loadingSpinner.Location = new System.Drawing.Point(193, 436);
+            this.loadingSpinner.Name = "loadingSpinner";
+            this.loadingSpinner.Size = new System.Drawing.Size(225, 21);
+            this.loadingSpinner.TabIndex = 20;
+            this.loadingSpinner.TabStop = false;
+            this.loadingSpinner.Visible = false;
+            // 
             // Toolkit
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(715, 460);
+            this.ClientSize = new System.Drawing.Size(577, 460);
+            this.Controls.Add(this.loadingSpinner);
             this.Controls.Add(this.groupBox4);
-            this.Controls.Add(this.groupBox6);
             this.Controls.Add(this.groupBox5);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.logBox);
-            this.Controls.Add(this.progressLabel);
             this.Controls.Add(this.groupBox3);
-            this.Controls.Add(this.progressBar);
             this.Controls.Add(this.groupBox2);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
@@ -404,23 +336,18 @@
             this.groupBox3.ResumeLayout(false);
             this.groupBox3.PerformLayout();
             this.groupBox5.ResumeLayout(false);
-            this.groupBox6.ResumeLayout(false);
-            this.groupBox6.PerformLayout();
             this.groupBox4.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.loadingSpinner)).EndInit();
             this.ResumeLayout(false);
-            this.PerformLayout();
 
         }
 
         #endregion
 
         private System.Windows.Forms.Button twrpButton;
-        private System.Windows.Forms.Button cwmButton;
         private System.Windows.Forms.Button unlockButton;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.GroupBox groupBox2;
-        private System.Windows.Forms.Button philzButton;
-        private System.Windows.Forms.ProgressBar progressBar;
         private System.Windows.Forms.GroupBox groupBox3;
         private System.Windows.Forms.Label SerialNumberLabel;
         private System.Windows.Forms.Label AndroidVersionLabel;
@@ -428,21 +355,18 @@
         private System.Windows.Forms.Label DeviceNameLabel;
         private System.Windows.Forms.Label RootedLabel;
         private System.Windows.Forms.RichTextBox logBox;
-        private System.Windows.Forms.Label progressLabel;
         private System.Windows.Forms.Button customButton;
         private System.Windows.Forms.GroupBox groupBox5;
         private System.Windows.Forms.Button rebootButton;
         private System.Windows.Forms.Button rebootRecoveryButton;
         private System.Windows.Forms.Button rebootBootloaderButton;
-        private System.Windows.Forms.GroupBox groupBox6;
-        private System.Windows.Forms.Button romButton;
-        private System.Windows.Forms.Label label1;
         private System.Windows.Forms.ComboBox modeBox;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.GroupBox groupBox4;
         private System.Windows.Forms.Button screenshotButton;
         private System.Windows.Forms.Button logcatButton;
+        private System.Windows.Forms.PictureBox loadingSpinner;
     }
 }
 
