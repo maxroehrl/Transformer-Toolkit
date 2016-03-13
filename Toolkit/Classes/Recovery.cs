@@ -2,9 +2,7 @@
  * Recovery.cs - Developed by Max Röhrl for Transformer Toolkit
  */
 
-using System;
 using System.IO;
-using System.Net;
 using System.Windows.Forms;
 
 namespace Toolkit
@@ -43,24 +41,14 @@ namespace Toolkit
                 if (File.Exists(_recoveryPath))
                     File.Delete(_recoveryPath);
 
-                using (WebClient webClient = new WebClient())
-                {
-                    int counter = 200;
-                    webClient.DownloadProgressChanged += (sender, e) =>
-                    {
-                        if (counter++%500 != 0) return;
-                        double bytesIn = Math.Round((Convert.ToDouble(e.BytesReceived)/1024), 0);
-                        _toolkit.Log($"Downloading: {bytesIn} KB");
-                    };
-                    webClient.DownloadFileCompleted += (sender, e) =>
-                    {
-                        FlashRecovery(_recoveryPath);
-                        _toolkit.Log("Download finished");
-                    };
-                    _toolkit.Log($"Starting download of twrp-{NetManager.GetTwrpVersion(_device)}-{_device.CodeName}.img ...");
-                    webClient.DownloadFileAsync(NetManager.GetTwrpUrl(_device), _recoveryPath);
-                }
+                _toolkit.Log($"Starting download of twrp-{NetManager.GetTwrpVersion(_device)}-{_device.CodeName}.img ...");
+                NetManager.DownloadFileAsync(NetManager.GetTwrpUrl(_device), _recoveryPath, _toolkit.Log, FlashRecovery);
             }
+        }
+
+        private void FlashRecovery()
+        {
+            FlashRecovery(_recoveryPath);
         }
 
         private void FlashRecovery(string path)

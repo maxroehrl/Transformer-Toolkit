@@ -126,11 +126,6 @@ namespace Toolkit
             bw.RunWorkerAsync();
         }
 
-        public void VersionIsOutdated()
-        {
-            Invoke(new MethodInvoker(() => Text += " (Update available)"));
-        }
-
         public void ShowErrorMessageBox(string message)
         {
             MessageBox.Show(message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -138,7 +133,11 @@ namespace Toolkit
 
         public void ShowUpdateDialog(string onlineVersion)
         {
-            Invoke(new MethodInvoker(() => new UpdateDialog(onlineVersion).ShowDialog()));
+            Invoke(new MethodInvoker(() =>
+            {
+                Text += " (Update available)";
+                new UpdateDialog(onlineVersion).ShowDialog();
+            }));
         }
     }
 }

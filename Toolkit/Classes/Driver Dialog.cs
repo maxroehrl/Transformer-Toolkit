@@ -5,7 +5,6 @@
 using System;
 using System.ComponentModel;
 using System.IO;
-using System.Net;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using Toolkit.Properties;
@@ -33,42 +32,30 @@ namespace Toolkit
                 if (Directory.Exists(_extractedDriverPath))
                     Directory.Delete(_extractedDriverPath, true);
 
-                using (WebClient webClient = new WebClient())
-                {
-                    webClient.DownloadProgressChanged += (sender2, e2) =>
-                    {
-                        double bytesIn = Math.Round((Convert.ToDouble(e2.BytesReceived)/1024), 0);
-                        ProgressLabelText($"Downloading: {bytesIn} KB");
-                    };
-                    webClient.DownloadFileCompleted += (sender2, e2) =>
-                    {
-                        ProgressLabelText("Extracting driver ...");
-                        System.IO.Compression.ZipFile.ExtractToDirectory(_driverPackagePath, _extractedDriverPath);
-
-                        ProgressLabelText("Installing driver ...");
-                        InstallHinfSection(IntPtr.Zero, IntPtr.Zero, _extractedDriverPath + "android_winusb.inf", 0);
-
-                        File.Delete(_driverPackagePath);
-                        Directory.Delete(_extractedDriverPath, true);
-                        MessageBox.Show("Drivers are installed now. Please reconnect your device.", "Information",
-                            MessageBoxButtons.OK, MessageBoxIcon.Information);
-                        CloseForm();
-                    };
-                    ProgressLabelText("Downloading driver ...");
-                    webClient.DownloadFileAsync(NetManager.GetDriverUrl(), _driverPackagePath);
-                }
+                ProgressLabelText("Downloading driver ...");
+                NetManager.DownloadFileAsync(NetManager.GetDriverUrl(), _driverPackagePath, ProgressLabelText, ExtractAndInstallDrivers);
             };
             bw.RunWorkerAsync();
+        }
+
+        private void ExtractAndInstallDrivers()
+        {
+            ProgressLabelText("Extracting driver ...");
+            System.IO.Compression.ZipFile.ExtractToDirectory(_driverPackagePath, _extractedDriverPath);
+
+            ProgressLabelText("Installing driver ...");
+            InstallHinfSection(IntPtr.Zero, IntPtr.Zero, _extractedDriverPath + "android_winusb.inf", 0);
+
+            File.Delete(_driverPackagePath);
+            Directory.Delete(_extractedDriverPath, true);
+            MessageBox.Show("Drivers are installed now. Please reconnect your device.", "Information",
+                MessageBoxButtons.OK, MessageBoxIcon.Information);
+            Invoke(new MethodInvoker(Close));
         }
 
         private void ProgressLabelText(string text)
         {
             Invoke(new MethodInvoker(() => progressLabel.Text = text));
-        }
-
-        private void CloseForm()
-        {
-            Invoke(new MethodInvoker(Close));
         }
 
         /// <summary>

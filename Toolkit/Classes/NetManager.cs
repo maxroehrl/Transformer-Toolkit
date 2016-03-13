@@ -41,23 +41,39 @@ namespace Toolkit
                     _startDialog.ShowErrorMessageBox("This toolkit needs a working internet connection to work properly!");
                     Application.Exit();
                 }
-                else
+
+                using (WebClient webClient = new WebClient())
                 {
-                    using (WebClient webClient = new WebClient())
-                    {
-                        webClient.DownloadFile(new Uri(ResolveGoogleDriveStaticUrl(VersionsUrl)), VersionFile);
-                        string onlineVersion = GetFirstValue("toolkit", "version");
-                        // Check if online version is higher than current version
-                        if (Convert.ToInt32(onlineVersion.Replace(".", string.Empty)) <=
-                            Convert.ToInt32(Application.ProductVersion.Replace(".", string.Empty)))
-                            return;
-                        _startDialog.ShowUpdateDialog(onlineVersion);
-                        _startDialog.VersionIsOutdated();
-                        IsOutdated = true;
-                    }
+                    webClient.DownloadFile(new Uri(ResolveGoogleDriveStaticUrl(VersionsUrl)), VersionFile);
+                    
+                    // Check if online version is higher than current version
+                    string onlineVersion = GetToolkitVersion();
+                    if (Convert.ToInt32(onlineVersion.Replace(".", string.Empty))
+                        <= Convert.ToInt32(Application.ProductVersion.Replace(".", string.Empty)))
+                        return;
+                    _startDialog.ShowUpdateDialog(onlineVersion);
+                    IsOutdated = true;
                 }
             };
             bw.RunWorkerAsync();
+        }
+
+        public static void DownloadFileAsync(Uri address, string fileName, Action<string> downloadProgressChangedAction,
+            Action downloadCompletedAction)
+        {
+            using (WebClient webClient = new WebClient())
+            {
+                int counter = 200;
+                webClient.DownloadProgressChanged += (sender, e) =>
+                {
+                    if (counter++ % 500 != 0)
+                        return;
+                    double bytesIn = Math.Round(Convert.ToDouble(e.BytesReceived) / 1024, 0);
+                    downloadProgressChangedAction($"Downloading: {bytesIn} KB");
+                };
+                webClient.DownloadFileCompleted += (sender, e) => downloadCompletedAction();
+                webClient.DownloadFileAsync(address, fileName);
+            }
         }
 
         public static string GetTwrpVersion(Device device)
@@ -78,6 +94,11 @@ namespace Toolkit
         public static Uri GetUnlockerUrl()
         {
             return new Uri(GetFirstValue("unlocker", "url"));
+        }
+
+        public static string GetToolkitVersion()
+        {
+            return GetFirstValue("toolkit", "version");
         }
 
         public static Uri GetToolkitUrl()
@@ -108,10 +129,10 @@ namespace Toolkit
         {
             try
             {
-                HttpWebRequest webRequest = (HttpWebRequest)WebRequest.Create(url);
+                HttpWebRequest webRequest = (HttpWebRequest) WebRequest.Create(url);
                 webRequest.AllowAutoRedirect = false;
-                HttpWebResponse response = (HttpWebResponse)webRequest.GetResponse();
-                return (response.Headers.Get("Location"));
+                HttpWebResponse response = (HttpWebResponse) webRequest.GetResponse();
+                return response.Headers.Get("Location");
             }
             catch (Exception)
             {
