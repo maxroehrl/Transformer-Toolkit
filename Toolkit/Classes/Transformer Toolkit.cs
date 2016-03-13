@@ -31,11 +31,11 @@ namespace Toolkit
             if (NetManager.IsOutdated)
                 Text += " (Update available)";
 
-            DeviceNameLabel.Text += _device.GetDeviceName();
-            CodeNameLabel.Text += _device.GetCodeName();
-            AndroidVersionLabel.Text += _device.GetAndroidVersion();
-            SerialNumberLabel.Text += _device.GetSerialNumber();
-            RootedLabel.Text += _device.IsRooted() ? "Yes" : "No";
+            DeviceNameLabel.Text += _device.DeviceName;
+            CodeNameLabel.Text += _device.CodeName;
+            AndroidVersionLabel.Text += _device.AndroidVersion;
+            SerialNumberLabel.Text += _device.SerialNumber;
+            RootedLabel.Text += _device.Rooted ? "Yes" : "No";
 
             if (File.Exists(NetManager.VersionFile))
                 twrpButton.Text += NetManager.GetTwrpVersion(_device);

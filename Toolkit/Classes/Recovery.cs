@@ -57,7 +57,7 @@ namespace Toolkit
                         FlashRecovery(_recoveryPath);
                         _toolkit.Log("Download finished");
                     };
-                    _toolkit.Log($"Starting download of twrp-{NetManager.GetTwrpVersion(_device)}-{_device.GetCodeName()}.img ...");
+                    _toolkit.Log($"Starting download of twrp-{NetManager.GetTwrpVersion(_device)}-{_device.CodeName}.img ...");
                     webClient.DownloadFileAsync(NetManager.GetTwrpUrl(_device), _recoveryPath);
                 }
             }

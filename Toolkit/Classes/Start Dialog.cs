@@ -41,17 +41,17 @@ namespace Toolkit
             if (selectedItemIndex == ListBox.NoMatches) return;
             _selectedDevice = _connectedDevices[selectedItemIndex];
 
-            if (!_selectedDevice.IsSupported())
+            if (!_selectedDevice.Supported)
             {
                 MessageBox.Show("Please only connect the TF700T, TF300T, ME301T or the Nexus 5 with enabled USB debugging.",
-                    _selectedDevice.GetDeviceName() + " is not supported",
+                    _selectedDevice.DeviceName + " is not supported",
                     MessageBoxButtons.OK, MessageBoxIcon.Error);
                 RefreshConnectedDevices();
             }
-            else if (_selectedDevice.IsOutdatedFirmware())
+            else if (_selectedDevice.OutdatedFirmware)
             {
                 MessageBox.Show("Please update to the latest firmware from Asus.\r\n",
-                        $"Android version {_selectedDevice.GetAndroidVersion()} is outdated",
+                        $"Android version {_selectedDevice.AndroidVersion} is outdated",
                         MessageBoxButtons.OK, MessageBoxIcon.Error);
                 RefreshConnectedDevices();
             }
@@ -118,7 +118,7 @@ namespace Toolkit
                 {
                     ConnectedDevicesListBox.Enabled = true;
                     foreach (Device device in _connectedDevices)
-                        ConnectedDevicesListBox.Items.Add($"{device.GetDeviceName()} ({device.GetSerialNumber()})");
+                        ConnectedDevicesListBox.Items.Add($"{device.DeviceName} ({device.SerialNumber})");
                 }
                 loadingSpinner.Hide();
                 refreshButton.Enabled = true;

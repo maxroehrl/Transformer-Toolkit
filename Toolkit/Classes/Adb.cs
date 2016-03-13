@@ -20,19 +20,19 @@ namespace Toolkit
         public static string ExecuteAdbCommand(string command, Device device = null)
         {
             lock (Lock)
-                return RunProcess(AdbExe, device == null ? command : $"-s {device.GetSerialNumber()} {command}");
+                return RunProcess(AdbExe, device == null ? command : $"-s {device.SerialNumber} {command}");
         }
 
         public static string ExecuteAdbShellCommand(string command, Device device, bool root = false)
         {
             lock (Lock)
-                return RunProcess(AdbExe, root ? $"-s {device.GetSerialNumber()} shell \"su -c \"{command}\"\"" : $"-s {device.GetSerialNumber()} shell \"{command}\"");
+                return RunProcess(AdbExe, root ? $"-s {device.SerialNumber} shell \"su -c \"{command}\"\"" : $"-s {device.SerialNumber} shell \"{command}\"");
         }
 
         public static string ExecuteFastbootCommand(string command, Device device = null)
         {
             lock (Lock)
-                return RunProcess(FastbootExe, device == null ? command : $"-s {device.GetSerialNumber()} {command}");
+                return RunProcess(FastbootExe, device == null ? command : $"-s {device.SerialNumber} {command}");
         }
 
         public static List<string> GetConnectedAdbDevicesSerialList()

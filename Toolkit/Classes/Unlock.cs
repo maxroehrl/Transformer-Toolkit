@@ -19,7 +19,7 @@ namespace Toolkit
             toolkit.ToggleButtons(false);
             toolkit.ShowLoadingSpinner(true);
 
-            if (device.GetCodeName() == "hammerhead" || device.GetCodeName() == "hammerheadcaf")
+            if (device.CodeName == "hammerhead" || device.CodeName == "hammerheadcaf")
             {
                 toolkit.Log("Rebooting into bootloader ...");
                 Adb.ExecuteAdbCommand("reboot bootloader", device);

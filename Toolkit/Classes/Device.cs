@@ -17,70 +17,35 @@ namespace Toolkit
         /// <summary>
         ///     List of supported devices
         /// </summary>
-        public static readonly string[] SupportedDevices = { "tf700t", "tf300t", "me301t", "hammerhead", "hammerheadcaf" };
+        private static readonly string[] SupportedDevices = { "tf700t", "tf300t", "me301t", "hammerhead", "hammerheadcaf" };
 
-        private readonly string _serialNumber;
-        private readonly string _deviceName;
-        private readonly string _codeName;
-        private readonly string _androidVersion;
-        private readonly bool _supported;
-        private readonly bool _outdatedFirmware;
-        private readonly bool _rooted;
+        public string SerialNumber { get; }
+        public string DeviceName { get; }
+        public string CodeName { get; }
+        public string AndroidVersion { get; }
+        public bool Supported { get; }
+        public bool OutdatedFirmware { get; }
+        public bool Rooted { get; }
 
         public Device(string serialNumber, StartDialog startDialog)
         {
-            _serialNumber = serialNumber;
-            _deviceName = Adb.GetBuildProperty("ro.product.model", this);
-            if (string.IsNullOrEmpty(_deviceName))
+            SerialNumber = serialNumber;
+            DeviceName = Adb.GetBuildProperty("ro.product.model", this);
+            if (string.IsNullOrEmpty(DeviceName))
             {
-                startDialog.ShowErrorMessageBox($"The informations about the connected device with the serial number \"{_serialNumber}\" " +
-                    "could not be fetched. Please follow the instructions to setup USB debugging.");
+                startDialog.ShowErrorMessageBox($"The informations about the connected device with the serial number \"{SerialNumber}\" "
+                    + "could not be fetched. Please follow the instructions to setup USB debugging.");
             }
             else
             {
-                _codeName = Adb.GetBuildProperty("ro.build.product", this);
-                _androidVersion = Adb.GetBuildProperty("ro.build.version.release", this);
-                _supported = SupportedDevices.Contains(_codeName);
-                _outdatedFirmware = (Convert.ToInt32(_androidVersion.Replace(".", string.Empty)) <
-                                     Convert.ToInt32(MinAndroidVersion.Replace(".", string.Empty)));
+                CodeName = Adb.GetBuildProperty("ro.build.product", this);
+                AndroidVersion = Adb.GetBuildProperty("ro.build.version.release", this);
+                Supported = SupportedDevices.Contains(CodeName);
+                OutdatedFirmware = Convert.ToInt32(AndroidVersion.Replace(".", string.Empty))
+                                 < Convert.ToInt32(MinAndroidVersion.Replace(".", string.Empty));
                 string suOutput = Adb.ExecuteAdbShellCommand("su -v", this);
-                _rooted = !(suOutput.Contains("not found") || suOutput.Contains("permission denied"));
+                Rooted = !(suOutput.Contains("not found") || suOutput.Contains("permission denied"));
             }
-        }
-
-        public string GetSerialNumber()
-        {
-            return _serialNumber;
-        }
-
-        public string GetDeviceName()
-        {
-            return _deviceName;
-        }
-
-        public string GetCodeName()
-        {
-            return _codeName;
-        }
-
-        public string GetAndroidVersion()
-        {
-            return _androidVersion;
-        }
-
-        public bool IsSupported()
-        {
-            return _supported;
-        }
-
-        public bool IsOutdatedFirmware()
-        {
-            return _outdatedFirmware;
-        }
-
-        public bool IsRooted()
-        {
-            return _rooted;
         }
     }
 }

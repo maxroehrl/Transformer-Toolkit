@@ -98,7 +98,7 @@ namespace Toolkit
         {
             XDocument xml = XDocument.Load(VersionFile);
             IEnumerable<string> query = from c in xml.Root.Descendants("twrp")
-                                        where c.Attribute("device").Value == device.GetCodeName()
+                                        where c.Attribute("device").Value == device.CodeName
                                         select c.Element(tag).Value;
             string output = query.FirstOrDefault();
             return tag == "version" ? output : ResolveGoogleDriveStaticUrl(output.Insert(0, GoogleDriveStaticUrlPrefix));
