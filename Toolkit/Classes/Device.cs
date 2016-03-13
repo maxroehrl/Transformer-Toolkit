@@ -38,9 +38,9 @@ namespace Toolkit
             }
             else
             {
-                CodeName = Adb.GetBuildProperty("ro.build.product", this);
+                CodeName = Adb.GetBuildProperty("ro.build.product", this).ToLower();
                 AndroidVersion = Adb.GetBuildProperty("ro.build.version.release", this);
-                Supported = SupportedDevices.Contains(CodeName.ToLower());
+                Supported = SupportedDevices.Contains(CodeName);
                 OutdatedFirmware = Convert.ToInt32(AndroidVersion.Replace(".", string.Empty))
                                  < Convert.ToInt32(MinAndroidVersion.Replace(".", string.Empty));
                 string suOutput = Adb.ExecuteAdbShellCommand("su -v", this);
