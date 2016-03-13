@@ -26,7 +26,8 @@ namespace Toolkit
         public static string ExecuteAdbShellCommand(string command, Device device, bool root = false)
         {
             lock (Lock)
-                return RunProcess(AdbExe, root ? $"-s {device.SerialNumber} shell \"su -c \"{command}\"\"" : $"-s {device.SerialNumber} shell \"{command}\"");
+                return RunProcess(AdbExe, root ? $"-s {device.SerialNumber} shell \"su -c \"{command}\"\""
+                                               : $"-s {device.SerialNumber} shell \"{command}\"");
         }
 
         public static string ExecuteFastbootCommand(string command, Device device = null)
@@ -40,8 +41,9 @@ namespace Toolkit
             List<string> devicesSerialList = new List<string>();
             string devicesCommandOutput = ExecuteAdbCommand("devices");
 
-            // If the output is smaller tha 29 there are no connected devices
-            if (devicesCommandOutput.Length <= 29) return devicesSerialList;
+            // If the output is smaller than 29 there are no connected devices
+            if (devicesCommandOutput.Length <= 29)
+                return devicesSerialList;
 
             using (StringReader s = new StringReader(devicesCommandOutput))
             {
