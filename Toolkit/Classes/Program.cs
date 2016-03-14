@@ -12,7 +12,7 @@ namespace Toolkit
         [STAThread]
         private static void Main()
         {
-            Adb.KillAllAdbProcesses();
+            ProcessManager.KillAllAdbProcesses();
             
             ResourceManager.ExtractAdbBinaries();
 

@@ -3,10 +3,8 @@
  */
 
 using System;
-using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
-using System.Net;
 using System.Windows.Forms;
 using Toolkit.Properties;
 
@@ -29,21 +27,13 @@ namespace Toolkit
             loadingSpinner.Show();
             progressLabel.Show();
 
+            var currentFileName = Process.GetCurrentProcess().MainModule.FileName;
+
             progressLabel.Text = "Renaming old toolkit ...";
-            File.Move(Process.GetCurrentProcess().MainModule.FileName, NetManager.OldAppFileName);
+            File.Move(currentFileName, NetManager.OldAppFileName);
 
-            using (WebClient webClient = new WebClient())
-            {
-                webClient.DownloadProgressChanged += (sender1, e1) =>
-                {
-                    double bytesIn = Math.Round((Convert.ToDouble(e1.BytesReceived) / 1024), 0);
-                    progressLabel.Text = $"Downloading: {bytesIn} KB";
-                };
-                webClient.DownloadFileCompleted += RestartToolkit;
-
-                progressLabel.Text = "Starting download ...";
-                webClient.DownloadFileAsync(NetManager.GetToolkitUrl(), "Transformer Toolkit.exe");
-            }
+            progressLabel.Text = "Starting download ...";
+            NetManager.DownloadFileAsync(NetManager.GetToolkitUrl(), currentFileName, text => progressLabel.Text = text, RestartToolkit);
         }
 
         private void noButton_Click(object sender, EventArgs e)
@@ -51,17 +41,11 @@ namespace Toolkit
             Close();
         }
 
-        private void RestartToolkit(object sender, AsyncCompletedEventArgs args)
+        private static void RestartToolkit()
         {
-            if (args.Error == null)
-            {
-                progressLabel.Text = "Download completed";
-                MessageBox.Show("The toolkit will restart now!", "Update completed", MessageBoxButtons.OK,
-                    MessageBoxIcon.Information);
-                Application.Restart();
-            }
-            else
-                MessageBox.Show("Updating toolkit failed!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBox.Show("The toolkit will restart now!", "Update completed", MessageBoxButtons.OK,
+                MessageBoxIcon.Information);
+            Application.Restart();
         }
     }
 }

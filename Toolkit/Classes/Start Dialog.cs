@@ -37,8 +37,9 @@ namespace Toolkit
 
         private void ConnectedDevicesListBox_MouseDoubleClick(object sender, MouseEventArgs e)
         {
-            int selectedItemIndex = ConnectedDevicesListBox.IndexFromPoint(e.Location);
-            if (selectedItemIndex == ListBox.NoMatches) return;
+            var selectedItemIndex = ConnectedDevicesListBox.IndexFromPoint(e.Location);
+            if (selectedItemIndex == ListBox.NoMatches)
+                return;
             _selectedDevice = _connectedDevices[selectedItemIndex];
 
             if (!_selectedDevice.Supported)
@@ -69,12 +70,13 @@ namespace Toolkit
         /// </summary>
         private void ConnectedDevicesListBox_DrawItem(object sender, DrawItemEventArgs e)
         {
-            if (e.Index <= -1) return;
-            object item = ConnectedDevicesListBox.Items[e.Index];
-            SizeF size = e.Graphics.MeasureString(item.ToString(), e.Font);
+            if (e.Index <= -1)
+                return;
+            var item = ConnectedDevicesListBox.Items[e.Index];
+            var size = e.Graphics.MeasureString(item.ToString(), e.Font);
             e.DrawBackground();
             e.Graphics.FillRectangle(SystemBrushes.Control, e.Bounds);
-            e.Graphics.DrawString(item.ToString(), e.Font, Brushes.Black, e.Bounds.Left + (e.Bounds.Width / 2 - size.Width / 2), e.Bounds.Top + (e.Bounds.Height / 2 - size.Height / 2));
+            e.Graphics.DrawString(item.ToString(), e.Font, Brushes.Black, e.Bounds.Left + (e.Bounds.Width  - size.Width) / 2, e.Bounds.Top + (e.Bounds.Height - size.Height) / 2);
             e.DrawFocusRectangle();
         }
 
@@ -101,23 +103,25 @@ namespace Toolkit
             _connectedDevices.Clear();
             loadingSpinner.Show();
 
-            BackgroundWorker bw = new BackgroundWorker();
+            var bw = new BackgroundWorker();
             bw.DoWork += (sender, args) =>
             {
                 // Add all devices to the connected devices list
-                List<string> serialList = Adb.GetConnectedAdbDevicesSerialList();
-                foreach (string serial in serialList)
+                var serialList = Adb.GetConnectedAdbDevicesSerialList();
+                foreach (var serial in serialList)
                     _connectedDevices.Add(new Device(serial, this));
             };
             bw.RunWorkerCompleted += (sender, args) =>
             {
                 // Check if there are connected devices
                 if (_connectedDevices.Count == 0)
+                {
                     NoDevicesLabel.Show();
+                }
                 else
                 {
                     ConnectedDevicesListBox.Enabled = true;
-                    foreach (Device device in _connectedDevices)
+                    foreach (var device in _connectedDevices)
                         ConnectedDevicesListBox.Items.Add($"{device.DeviceName} ({device.SerialNumber})");
                 }
                 loadingSpinner.Hide();

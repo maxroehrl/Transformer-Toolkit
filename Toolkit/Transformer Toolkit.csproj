@@ -79,6 +79,8 @@
     <Compile Include="Classes\Driver Dialog.Designer.cs">
       <DependentUpon>Driver Dialog.cs</DependentUpon>
     </Compile>
+    <Compile Include="Classes\Fastboot.cs" />
+    <Compile Include="Classes\ProcessManager.cs" />
     <Compile Include="Classes\ResourceManager.cs" />
     <Compile Include="Classes\Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

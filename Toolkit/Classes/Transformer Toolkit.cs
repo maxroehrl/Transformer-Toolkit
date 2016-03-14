@@ -3,7 +3,7 @@
  */
 
 using System;
-using System.Diagnostics;
+using System.ComponentModel;
 using System.Drawing;
 using System.IO;
 using System.Text.RegularExpressions;
@@ -37,10 +37,10 @@ namespace Toolkit
             SerialNumberLabel.Text += _device.SerialNumber;
             RootedLabel.Text += _device.Rooted ? "Yes" : "No";
 
-            if (File.Exists(NetManager.VersionFile))
+            if (File.Exists(NetManager.ManifestFile))
                 twrpButton.Text += NetManager.GetTwrpVersion(_device);
             else
-                LogError("Fetching recovery versions failed!");
+                InvokeLogError("Fetching recovery versions failed!");
         }
 
         private void Toolkit_FormClosing(object sender, FormClosingEventArgs e)
@@ -50,168 +50,182 @@ namespace Toolkit
 
         private void unlockButton_Click(object sender, EventArgs e)
         {
-            new Thread(() => new Unlock(this, _device)).Start();
+            InvokeToggleButtons(false);
+            var bw = new BackgroundWorker();
+            bw.DoWork += (sender1, e1) => Unlock.RequestUnlock(this, _device);
+            bw.RunWorkerCompleted += (sender1, e1) => InvokeToggleButtons(true);
+            bw.RunWorkerAsync();
         }
 
         private void twrpButton_Click(object sender, EventArgs e)
         {
-            new Thread(() => new Recovery(this, _device, "twrp")).Start();
+            InvokeToggleButtons(false);
+            var bw = new BackgroundWorker();
+            bw.DoWork += (sender1, e1) => Recovery.FetchRecovery(this, _device, Recovery.Twrp);
+            bw.RunWorkerCompleted += (sender1, e1) => InvokeToggleButtons(true);
+            bw.RunWorkerAsync();
         }
 
         private void customButton_Click(object sender, EventArgs e)
         {
+            InvokeToggleButtons(false);
             MessageBox.Show("Remember if you select a wrong recovery image you can brick your device." +
                             "You have the full responsibility for any damage or fault caused by your decision.",
                 "Warning", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
 
-            Thread t = new Thread(() => new Recovery(this, _device, "custom"));
-            // Thread must be started in SingleThreadedApartment because of the choose file dialog
+            // Thread must be started in SingleThreadedApartment because of the ChooseFileDialog
+            var t = new Thread(() => Recovery.FetchRecovery(this, _device, Recovery.Custom));
             t.SetApartmentState(ApartmentState.STA);
             t.Start();
         }
 
         private void modeBox_SelectedIndexChanged(object sender, EventArgs e)
         {
-            switch (modeBox.SelectedIndex)
-            {
-                case 0: // ADB
-                    rebootButton.Enabled = true;
-                    rebootRecoveryButton.Enabled = true;
-                    rebootBootloaderButton.Enabled = true;
-                    break;
-                case 1: // Fastboot cannot reboot into recovery
-                    rebootButton.Enabled = true;
-                    rebootRecoveryButton.Enabled = false;
-                    rebootBootloaderButton.Enabled = true;
-                    break;
-            }
+            rebootButton.Enabled = true;
+            rebootRecoveryButton.Enabled = modeBox.SelectedIndex == 0;
+            rebootBootloaderButton.Enabled = true;
         }
 
         private void rebootButton_Click(object sender, EventArgs e)
         {
-            ToggleButtons(false);
-            loadingSpinner.Show();
-            if (modeBox.SelectedText == "ADB")
-                Adb.ExecuteAdbCommand("reboot", _device);
-            else
-                Adb.ExecuteFastbootCommand("reboot", _device);
-            loadingSpinner.Hide();
-            ToggleButtons(true);
+            InvokeToggleButtons(false);
+            if (modeBox.SelectedIndex == 0)
+                Adb.ExecuteCommand("reboot", _device);
+            else if (modeBox.SelectedIndex == 1)
+                Fastboot.ExecuteCommand("reboot", _device);
+            InvokeToggleButtons(true);
         }
 
         private void rebootRecoveryButton_Click(object sender, EventArgs e)
         {
-            ToggleButtons(false);
-            loadingSpinner.Show();
-            Adb.ExecuteAdbCommand("reboot recovery", _device);
-            loadingSpinner.Hide();
-            ToggleButtons(true);
+            InvokeToggleButtons(false);
+            if (modeBox.SelectedIndex == 0)
+                Adb.ExecuteCommand("reboot recovery", _device);
+            InvokeToggleButtons(true);
         }
 
         private void rebootBootloaderButton_Click(object sender, EventArgs e)
         {
-            ToggleButtons(false);
-            loadingSpinner.Show();
-            if (modeBox.SelectedText == "ADB")
-                Adb.ExecuteAdbCommand("reboot bootloader", _device);
-            else
-                Adb.ExecuteFastbootCommand("reboot-bootloader", _device);
-            loadingSpinner.Hide();
-            ToggleButtons(true);
+            InvokeToggleButtons(false);
+            if (modeBox.SelectedIndex == 0)
+                Adb.ExecuteCommand("reboot bootloader", _device);
+            else if (modeBox.SelectedIndex == 1)
+                Fastboot.ExecuteCommand("reboot-bootloader", _device);
+            InvokeToggleButtons(true);
         }
 
         private void logcatButton_Click(object sender, EventArgs e)
         {
-            ToggleButtons(false);
-            loadingSpinner.Show();
-
-            if (File.Exists("Logcat.txt"))
-                File.Delete("Logcat.txt");
-
-            Log("Saving logcat ...");
-            try
+            InvokeToggleButtons(false);
+            // Thread must be started in SingleThreadedApartment because of the SaveFileDialog
+            var t = new Thread(() =>
             {
-                string unixLog = Adb.ExecuteAdbCommand("logcat -d", _device);
-                // Convert UNIX text file to DOS text file
-                string log = Regex.Replace(unixLog, @"^\s+$[\r\n]*", "", RegexOptions.Multiline);
-                File.WriteAllText("Logcat.txt", log);
-                Process.Start("Logcat.txt");
-            }
-            catch (Exception)
-            {
-                LogError("Saving Logcat.txt failed!");
-            }
-            loadingSpinner.Hide();
-            ToggleButtons(true);
+                try
+                {
+                    var saveFileDialog = new SaveFileDialog
+                    {
+                        FileName = "Logcat.txt",
+                        Filter = "Text files (*.txt) | *.txt"
+                    };
+                    if (saveFileDialog.ShowDialog() != DialogResult.OK)
+                    {
+                        InvokeToggleButtons(true);
+                        return;
+                    }
+                    InvokeLog("Saving logcat ...");
+                    var logcat = Adb.ExecuteCommand("logcat -d", _device);
+                    // Convert UNIX text file to DOS text file
+                    logcat = Regex.Replace(logcat, @"^\s+$[\r\n]*", string.Empty, RegexOptions.Multiline);
+                    File.WriteAllText(saveFileDialog.FileName, logcat);
+                }
+                catch (Exception)
+                {
+                    InvokeLogError("Saving Logcat.txt failed!");
+                }
+                InvokeToggleButtons(true);
+            });
+            t.SetApartmentState(ApartmentState.STA);
+            t.Start();
         }
 
         private void screenshotButton_Click(object sender, EventArgs e)
         {
-            ToggleButtons(false);
-            loadingSpinner.Show();
-            try
+            InvokeToggleButtons(false);
+            // Thread must be started in SingleThreadedApartment because of the SaveFileDialog
+            var t = new Thread(() =>
             {
-                Log("Saving screenshot ...");
-                Adb.ExecuteAdbShellCommand("screencap -p /sdcard/screen.png", _device);
-                string fileName = "Screenshot " + DateTime.Now.ToString("F").Replace(":", "-") + ".png";
-                Adb.ExecuteAdbCommand($"pull \"/sdcard/screen.png\" \"{fileName}\"", _device);
-                Adb.ExecuteAdbShellCommand("rm /sdcard/screen.png", _device);
-                Process.Start(fileName);
-            }
-            catch (Exception)
-            {
-                LogError("Saving screenshot failed!");
-            }
-            loadingSpinner.Hide();
-            ToggleButtons(true);
-        }
-
-        public void ToggleButtons(bool value)
-        {
-            Invoke(new MethodInvoker(() =>
-            {
-                twrpButton.Enabled = value;
-                unlockButton.Enabled = value;
-                customButton.Enabled = value;
-                modeBox.Enabled = value;
-                if (value)
+                try
                 {
-                    // Enable the buttons accourding to the modeBox
-                    modeBox_SelectedIndexChanged(new object(), new EventArgs());
+                    var saveFileDialog = new SaveFileDialog
+                    {
+                        FileName = "Screenshot.png",
+                        Filter = "Image files (*.png)|*.png"
+                    };
+                    if (saveFileDialog.ShowDialog() != DialogResult.OK)
+                    {
+                        InvokeToggleButtons(true);
+                        return;
+                    }
+                    InvokeLog("Saving screenshot ...");
+                    const string screenshot = "\"/sdcard/Screenshot.png\"";
+                    Adb.ExecuteShellCommand($"screencap -p {screenshot}", _device);
+                    Adb.ExecuteCommand($"pull {screenshot} \"{saveFileDialog.FileName}\"", _device);
+                    Adb.ExecuteShellCommand($"rm {screenshot}", _device);
                 }
-                else
+                catch (Exception)
                 {
-                    rebootButton.Enabled = false;
-                    rebootRecoveryButton.Enabled = false;
-                    rebootBootloaderButton.Enabled = false;
+                    InvokeLogError("Saving screenshot failed!");
                 }
-                logcatButton.Enabled = value;
-                screenshotButton.Enabled = value;
-            }));
+                InvokeToggleButtons(true);
+            });
+            t.SetApartmentState(ApartmentState.STA);
+            t.Start();
         }
 
-        public void Log(string text)
+        public void InvokeToggleButtons(bool value)
         {
-            Invoke(new MethodInvoker(() => logBox.AppendText(text + Environment.NewLine)));
+            if (InvokeRequired)
+                Invoke(new MethodInvoker(() => ToogleButtons(value)));
+            else
+                ToogleButtons(value);
         }
 
-        public void LogError(string text)
+        private void ToogleButtons(bool value)
         {
-            Invoke(new MethodInvoker(() =>
-            {
-                logBox.SelectionStart = logBox.TextLength;
-                logBox.SelectionLength = 0;
-                logBox.SelectionColor = Color.Red;
+            twrpButton.Enabled = value;
+            unlockButton.Enabled = value;
+            customButton.Enabled = value;
+            modeBox.Enabled = value;
+            rebootButton.Enabled = value && modeBox.SelectedIndex >= 0;
+            rebootRecoveryButton.Enabled = value && modeBox.SelectedIndex == 0;
+            rebootBootloaderButton.Enabled = value && modeBox.SelectedIndex >= 0;
+            logcatButton.Enabled = value;
+            screenshotButton.Enabled = value;
+        }
+
+        public void InvokeLog(string text)
+        {
+            if (InvokeRequired)
+                Invoke(new MethodInvoker(() => logBox.AppendText(text + Environment.NewLine)));
+            else
                 logBox.AppendText(text + Environment.NewLine);
-                logBox.SelectionColor = logBox.ForeColor;
-            }));
         }
 
-        public void ShowLoadingSpinner(bool value)
+        public void InvokeLogError(string text)
         {
-            Invoke(value
-                ? new MethodInvoker(() => loadingSpinner.Show())
-                : (() => loadingSpinner.Hide()));
+            if (InvokeRequired)
+                Invoke(new MethodInvoker(() => LogError(text)));
+            else
+                LogError(text);
+        }
+
+        private void LogError(string text)
+        {
+            logBox.SelectionStart = logBox.TextLength;
+            logBox.SelectionLength = 0;
+            logBox.SelectionColor = Color.Red;
+            logBox.AppendText(text + Environment.NewLine);
+            logBox.SelectionColor = logBox.ForeColor;
         }
 
         public void ShowMessageBox(string message)

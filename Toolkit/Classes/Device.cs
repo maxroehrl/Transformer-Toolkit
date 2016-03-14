@@ -31,21 +31,19 @@ namespace Toolkit
         {
             SerialNumber = serialNumber;
             DeviceName = Adb.GetBuildProperty("ro.product.model", this);
-            if (string.IsNullOrEmpty(DeviceName))
+            if (string.IsNullOrEmpty(DeviceName) || DeviceName.Contains("error"))
             {
                 startDialog.ShowErrorMessageBox($"The informations about the connected device with the serial number \"{SerialNumber}\" "
                     + "could not be fetched. Please follow the instructions to setup USB debugging.");
+                return;
             }
-            else
-            {
-                CodeName = Adb.GetBuildProperty("ro.build.product", this).ToLower();
-                AndroidVersion = Adb.GetBuildProperty("ro.build.version.release", this);
-                Supported = SupportedDevices.Contains(CodeName);
-                OutdatedFirmware = Convert.ToInt32(AndroidVersion.Replace(".", string.Empty))
-                                 < Convert.ToInt32(MinAndroidVersion.Replace(".", string.Empty));
-                string suOutput = Adb.ExecuteAdbShellCommand("su -v", this);
-                Rooted = !(suOutput.Contains("not found") || suOutput.Contains("permission denied"));
-            }
+            CodeName = Adb.GetBuildProperty("ro.build.product", this).ToLower();
+            AndroidVersion = Adb.GetBuildProperty("ro.build.version.release", this);
+            Supported = SupportedDevices.Contains(CodeName);
+            OutdatedFirmware = Convert.ToInt32(AndroidVersion.Replace(".", string.Empty))
+                               < Convert.ToInt32(MinAndroidVersion.Replace(".", string.Empty));
+            var suOutput = Adb.ExecuteShellCommand("su -v", this);
+            Rooted = !(suOutput.Contains("not found") || suOutput.Contains("permission denied"));
         }
     }
 }

@@ -24,7 +24,7 @@ namespace Toolkit
 
         private void DriverDialog_Load(object sender, EventArgs e)
         {
-            BackgroundWorker bw = new BackgroundWorker();
+            var bw = new BackgroundWorker();
             bw.DoWork += (sender1, e1) =>
             {
                 if (File.Exists(_driverPackagePath))
