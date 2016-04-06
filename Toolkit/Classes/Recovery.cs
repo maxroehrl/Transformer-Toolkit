@@ -26,10 +26,8 @@ namespace Toolkit
                 {
                     Filter = "Image files (*.img)|*.img|Blob files (*.blob)|*.blob",
                 };
-
                 if (openFileDialog.ShowDialog() == DialogResult.OK)
                     FlashRecovery(openFileDialog.FileName);
-                _toolkit.InvokeToggleButtons(true);
             }
             else if (recovery.Equals(Twrp))
             {
@@ -63,6 +61,7 @@ namespace Toolkit
 
             _toolkit.InvokeLog("Rebooting ...");
             Fastboot.ExecuteCommand("reboot", _device);
+            _toolkit.InvokeToggleButtons(true);
         }
     }
 }

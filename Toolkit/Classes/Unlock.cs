@@ -33,6 +33,7 @@ namespace Toolkit
                     break;
                 default:
                     toolkit.InvokeLogError("Unlocking your device is not possible with this tool");
+                    toolkit.InvokeToggleButtons(true);
                     break;
             }
         }
@@ -48,6 +49,7 @@ namespace Toolkit
             _toolkit.ShowMessageBox("Now please follow the instructions on your device.");
 
             _toolkit.InvokeLog("Unlock requested!");
+            _toolkit.InvokeToggleButtons(true);
         }
 
         private static void InstallUnlocker()
@@ -60,6 +62,7 @@ namespace Toolkit
             if (output.Contains("Failure"))
             {
                 _toolkit.InvokeLogError("Installation failed!");
+                _toolkit.InvokeToggleButtons(true);
                 return;
             }
             _toolkit.InvokeLog("Starting unlock app ...");
@@ -75,6 +78,8 @@ namespace Toolkit
                                                             "Would you like to visit the website of AndroidRoot.Mobi?");
             if (dialogResult == DialogResult.Yes)
                 Process.Start("https://www.androidroot.mobi/pages/guides/tegra3-guide-nvflash-jellybean/");
+
+            _toolkit.InvokeToggleButtons(true);
         }
     }
 }

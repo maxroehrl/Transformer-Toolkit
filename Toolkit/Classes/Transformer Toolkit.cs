@@ -53,7 +53,6 @@ namespace Toolkit
             InvokeToggleButtons(false);
             var bw = new BackgroundWorker();
             bw.DoWork += (sender1, e1) => Unlock.RequestUnlock(this, _device);
-            bw.RunWorkerCompleted += (sender1, e1) => InvokeToggleButtons(true);
             bw.RunWorkerAsync();
         }
 
@@ -62,7 +61,6 @@ namespace Toolkit
             InvokeToggleButtons(false);
             var bw = new BackgroundWorker();
             bw.DoWork += (sender1, e1) => Recovery.FetchRecovery(this, _device, Recovery.Twrp);
-            bw.RunWorkerCompleted += (sender1, e1) => InvokeToggleButtons(true);
             bw.RunWorkerAsync();
         }
 
