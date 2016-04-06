@@ -59,13 +59,16 @@ namespace Toolkit
         {
             using (var webClient = new WebClient())
             {
-                var counter = 200;
+                var lastUpdate = DateTime.Now;
                 webClient.DownloadProgressChanged += (sender, e) =>
                 {
-                    if (counter++ % 500 != 0)
+                    var now = DateTime.Now;
+                    // Only update progress once every two per second
+                    if ((now - lastUpdate).CompareTo(new TimeSpan(0, 0, 2)) < 0)
                         return;
                     var bytesIn = Math.Round(Convert.ToDouble(e.BytesReceived) / 1024, 0);
                     downloadProgressChangedAction($"Downloading: {bytesIn} KB");
+                    lastUpdate = now;
                 };
                 webClient.DownloadFileCompleted += (sender, e) => downloadCompletedAction();
                 webClient.DownloadFileAsync(address, fileName);
